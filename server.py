@@ -2,13 +2,13 @@ import flask
 import jwt
 import datetime
 import random
+import json
+import os
 import user_handling
 
-app = flask.Flask('Czat')
+app = flask.Flask('Chattersi')
 key = open("key.txt", "r")
 app.secret_key = key.read()
-
-rooms = {}
 
 def create_jwt(username,mode,time_version):
     period = None
@@ -32,8 +32,42 @@ def decode_jwt(token):
         return None
     except jwt.InvalidTokenError:
         return None
-    
+
+def check_rooms_file_existence():
+    if os.path.isdir('data') == False:
+        os.mkdir('data')
+    if os.path.isfile('data/rooms.json') == False:
+        with open('data/rooms.json','w') as file:
+            json.dump({}, file, indent = 2)
+
+def get_rooms_codes():
+    check_rooms_file_existence()
+    rooms = None
+    with open('data/rooms.json','r') as file:
+        rooms = json.load(file)  
+    return list(rooms.keys())
+       
+def save_room(room_code,members):
+    check_rooms_file_existence()
+    rooms = None
+    with open('data/rooms.json','r') as file:
+        rooms = json.load(file)
+    rooms[room_code] = members
+    with open('data/rooms.json','w') as file:
+        json.dump(rooms, file, indent = 2)
+
+def get_roomates(room_codes):
+    check_rooms_file_existence()
+    rooms = None
+    with open('data/rooms.json','r') as file:
+        rooms = json.load(file)
+    members = []
+    for code in room_codes:
+        members += rooms[code]
+    return members
+
 def generate_room_code():
+    rooms = get_rooms_codes()
     while True:
         code = ''
         for _ in range(6):
@@ -97,10 +131,13 @@ def check_totp():
         data = flask.request.get_json()
         token = data.get('token')
         token_content = decode_jwt(token)
-        if token_content is None:
+        mode = None
+        try:
+            mode = token_content.get('mode')
+        except Exception:
             message = 'Nie można przystąpić do weryfikacji TOTP'
             return flask.jsonify({'status':400,'message':message})
-        if token_content.get('mode') == 'totp':
+        if mode == 'totp':
             totp_code = data.get('totp_code')
             username = token_content.get('user_id')
             actual_user = user_handling.user(username,None)
@@ -120,17 +157,33 @@ def invite():
     if flask.request.method == 'POST':
         data = flask.request.get_json()
         token = data.get('token')
+        remote_user = data.get('user')
         token_content = decode_jwt(token)
-        if token_content is None:
+        mode = None
+        try:
+            mode = token_content.get('mode')
+        except Exception:
             message = 'Brak zalogowanego użytkownika'
             return flask.jsonify({'status':400,'message':message})
-        if token_content.get('mode') == 'logedin':
-            remote_user = data.get('user')
+        users = None
+        with open('data/users.json','r') as file:
+            users = list(json.load(file).keys())
+        if remote_user not in users:
+            message = 'Podany użytkownik nie istnieje'
+            return flask.jsonify({'status':400,'message':message})
+        if mode == 'logedin':
             username = token_content.get('user_id')
-            room_code = generate_room_code()
-            rooms[room_code] = [username,remote_user]
-            message = 'Wysłano zproszenie do '+remote_user
-            return flask.jsonify({'status':200,'message':message})
+            user = user_handling.user(username,None)
+            if remote_user in get_roomates(user.get_room_codes()):
+                message = 'Ten użytkownik został już wcześniej zaproszony'
+                return flask.jsonify({'status':400,'message':message})
+            else:
+                room_code = generate_room_code()
+                save_room(room_code,[username,remote_user])
+                room_creator = user_handling.user(username,None)
+                room_creator.add_to_pending_room(room_code,remote_user)
+                message = 'Wysłano zproszenie do '+remote_user
+                return flask.jsonify({'status':200,'message':message})
         else:
             message = 'Brak zalogowanego użytkownika'
             return flask.jsonify({'status':400,'message':message})

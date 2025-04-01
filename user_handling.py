@@ -58,3 +58,20 @@ class user:
             return True
         else:
             return False
+    def add_to_pending_room(self,room_code,remote_user):
+        users = None
+        with open('data/users.json','r') as file:
+            users = json.load(file)
+        users[self.username]['pending_rooms'].append(room_code)
+        users[remote_user]['pending_rooms'].append(room_code)
+        with open('data/users.json','w') as file:
+            json.dump(users, file, indent = 3)
+    def get_room_codes(self):
+        self.check_structure_existence()
+        users = None
+        with open('data/users.json','r') as file:
+            users = json.load(file)
+        accepted = users[self.username]['rooms']
+        pending = users[self.username]['pending_rooms']
+        all_room_codes = accepted + pending
+        return all_room_codes
