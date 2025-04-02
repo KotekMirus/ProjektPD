@@ -2,7 +2,6 @@ import json
 import os
 import bcrypt
 import pyotp
-import pyqrcode
 
 class user:
     def __init__(self,username,password):
@@ -17,10 +16,6 @@ class user:
             return False
         else:
             self.secret_key = pyotp.random_base32()
-            totp = pyotp.TOTP(self.secret_key)
-            uri = totp.provisioning_uri(name=self.username,issuer_name="Czat")
-            qr_code = pyqrcode.create(uri)
-            qr_code.png(f"images/{self.username}_qr_code.png",scale=6)
             self.save()
             return True
     def check_structure_existence(self):
@@ -54,7 +49,7 @@ class user:
         with open('data/users.json','r') as file:
             users = json.load(file)
         user_secret_key = pyotp.TOTP(users[self.username]["secret_key"])
-        if user_secret_key.verify(totp_code):
+        if user_secret_key.verify(totp_code,valid_window=1):
             return True
         else:
             return False
