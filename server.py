@@ -38,7 +38,7 @@ def check_rooms_file_existence():
         os.mkdir('data')
     if os.path.isfile('data/rooms.json') == False:
         with open('data/rooms.json','w') as file:
-            json.dump({}, file, indent = 2)
+            json.dump({}, file, indent = 3)
 
 def get_rooms_codes():
     check_rooms_file_existence()
@@ -47,14 +47,14 @@ def get_rooms_codes():
         rooms = json.load(file)  
     return list(rooms.keys())
        
-def save_room(room_code,members):
+def save_room(room_code,members,author):
     check_rooms_file_existence()
     rooms = None
     with open('data/rooms.json','r') as file:
         rooms = json.load(file)
-    rooms[room_code] = members
+    rooms[room_code] = {'members':members,'author':author}
     with open('data/rooms.json','w') as file:
-        json.dump(rooms, file, indent = 2)
+        json.dump(rooms, file, indent = 3)
 
 def get_roommates(room_codes):
     check_rooms_file_existence()
@@ -63,7 +63,7 @@ def get_roommates(room_codes):
         rooms = json.load(file)
     members = []
     for code in room_codes:
-        members += rooms[code]
+        members += rooms[code]['members']
     return members
 
 def find_room(user1,user2):
@@ -72,11 +72,13 @@ def find_room(user1,user2):
     with open('data/rooms.json','r') as file:
         rooms = json.load(file)
     found_code = None
+    room_author = None
     for code in list(rooms.keys()):
-        if user1 in rooms[code] and user2 in rooms[code]:
+        if user1 in rooms[code]['members'] and user2 in rooms[code]['members']:
             found_code = code
+            room_author = rooms[code]['author']
             break
-    return found_code
+    return found_code, room_author
 
 def find_all_user_rooms(username,room_type):
     users = None
@@ -207,7 +209,7 @@ def invite():
                 return flask.jsonify({'status':400,'message':message})
             else:
                 room_code = generate_room_code()
-                save_room(room_code,[username,remote_user])
+                save_room(room_code,[username,remote_user],username)
                 room_creator = user_handling.user(username,None)
                 room_creator.add_to_pending_room(room_code,remote_user)
                 message = 'Wysłano zproszenie do '+remote_user
@@ -239,8 +241,8 @@ def reply_to_invitation():
             return flask.jsonify({'status':400,'message':message})
         if mode == 'logedin':
             username = token_content.get('user_id')
-            code = find_room(username,remote_user)
-            if code is not None:
+            code,author = find_room(username,remote_user)
+            if code is not None and author != username:
                 decision = data.get('decision')
                 if decision == 'accept':
                     users[username]['pending_rooms'].remove(code)
@@ -261,14 +263,14 @@ def reply_to_invitation():
                         rooms = json.load(file)
                     rooms.pop(code)
                     with open('data/rooms.json','w') as file:
-                        json.dump(rooms, file, indent = 2)
+                        json.dump(rooms, file, indent = 3)
                     message = 'Poprawnie odrzucono rozmowę między '+username+' a '+remote_user
                     return flask.jsonify({'status':200,'message':message})
                 else:
                     message = 'Nieprawidłowa decyzja'
                     return flask.jsonify({'status':400,'message':message})
             else:
-                message = 'Podany użytkownik nie został wcześniej zaproszony'
+                message = 'Podany użytkownik nie został wcześniej zaproszony lub brak uprawnień do akceptacji tego zaproszenia'
                 return flask.jsonify({'status':400,'message':message})
         else:
             message = 'Brak zalogowanego użytkownika'
