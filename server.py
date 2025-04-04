@@ -52,7 +52,7 @@ def save_room(room_code,members,author):
     rooms = None
     with open('data/rooms.json','r') as file:
         rooms = json.load(file)
-    rooms[room_code] = {'members':members,'author':author}
+    rooms[room_code] = {'members':members,'author':author,members[0]:[],members[1]:[]}
     with open('data/rooms.json','w') as file:
         json.dump(rooms, file, indent = 3)
 
@@ -95,6 +95,33 @@ def find_all_user_rooms(username,room_type):
         return []
     roommates = [user for user in roommates_tmp if user != username]
     return roommates
+
+def save_sent_message(room_code,author,message):
+    check_rooms_file_existence()
+    rooms = None
+    with open('data/rooms.json','r') as file:
+        rooms = json.load(file)
+    rooms[room_code][author].append(message)
+    with open('data/rooms.json','w') as file:
+        json.dump(rooms, file, indent = 3)
+
+def return_all_messages(room_code,receiver):
+    check_rooms_file_existence()
+    rooms = None
+    with open('data/rooms.json','r') as file:
+        rooms = json.load(file)
+    print(rooms)
+    members = rooms[room_code]['members']
+    print(members)
+    author = ([member for member in members if member != receiver])[0]
+    print(author)
+    messages = rooms[room_code][author]
+    print(messages)
+    rooms[room_code][author] = []
+    print(rooms)
+    with open('data/rooms.json','w') as file:
+        json.dump(rooms, file, indent = 3)
+    return messages
 
 def generate_room_code():
     rooms = get_rooms_codes()
@@ -204,7 +231,8 @@ def invite():
         if mode == 'logedin':
             username = token_content.get('user_id')
             user = user_handling.user(username,None)
-            if remote_user in get_roommates(user.get_room_codes()):
+            accepted,pending = user.get_room_codes()
+            if remote_user in get_roommates(accepted+pending):
                 message = 'Ten użytkownik został już wcześniej zaproszony'
                 return flask.jsonify({'status':400,'message':message})
             else:
@@ -294,6 +322,89 @@ def get_rooms():
             users = find_all_user_rooms(username,room_type)
             message = 'Zwrócono członków danych pokoi'
             return flask.jsonify({'status':200,'message':message,'users':users})
+        else:
+            message = 'Brak zalogowanego użytkownika'
+            return flask.jsonify({'status':400,'message':message})
+
+@app.route('/getcode',methods=['POST'])
+def get_room_code():
+    if flask.request.method == 'POST':
+        data = flask.request.get_json()
+        token = data.get('token')
+        token_content = decode_jwt(token)
+        mode = None
+        try:
+            mode = token_content.get('mode')
+        except Exception:
+            message = 'Brak zalogowanego użytkownika'
+            return flask.jsonify({'status':400,'message':message})
+        if mode == 'logedin':
+            username = token_content.get('user_id')
+            remote_user = data.get('user')
+            room_code,author = find_room(username,remote_user)
+            if room_code is not None:
+                message = 'Poprawnie znaleziono kod rozmowy z podanym użytkownikiem'
+                return flask.jsonify({'status':200,'message':message,'room_code':room_code})
+            else:
+                message = 'Brak rozmowy z podanym użytkownikiem'
+                return flask.jsonify({'status':400,'message':message})
+        else:
+            message = 'Brak zalogowanego użytkownika'
+            return flask.jsonify({'status':400,'message':message})
+
+@app.route('/send',methods=['POST'])
+def send_message():
+    if flask.request.method == 'POST':
+        data = flask.request.get_json()
+        token = data.get('token')
+        token_content = decode_jwt(token)
+        mode = None
+        try:
+            mode = token_content.get('mode')
+        except Exception:
+            message = 'Brak zalogowanego użytkownika'
+            return flask.jsonify({'status':400,'message':message})
+        if mode == 'logedin':
+            username = token_content.get('user_id')
+            room_code = data.get('room_code')
+            user = user_handling.user(username,None)
+            accepted,pending = user.get_room_codes()
+            if room_code in accepted:
+                sent_message = data.get('message')
+                save_sent_message(room_code,username,sent_message)
+                message = 'Poprawnie wysłano wiadomość'
+                return flask.jsonify({'status':200,'message':message})
+            else:
+                message = 'Nie można wysłać wiadomości do tego użytkownika'
+                return flask.jsonify({'status':400,'message':message})
+        else:
+            message = 'Brak zalogowanego użytkownika'
+            return flask.jsonify({'status':400,'message':message})
+
+@app.route('/get',methods=['POST'])
+def get_messages():
+    if flask.request.method == 'POST':
+        data = flask.request.get_json()
+        token = data.get('token')
+        token_content = decode_jwt(token)
+        mode = None
+        try:
+            mode = token_content.get('mode')
+        except Exception:
+            message = 'Brak zalogowanego użytkownika'
+            return flask.jsonify({'status':400,'message':message})
+        if mode == 'logedin':
+            username = token_content.get('user_id')
+            room_code = data.get('room_code')
+            user = user_handling.user(username,None)
+            accepted,pending = user.get_room_codes()
+            if room_code in accepted:
+                messages = return_all_messages(room_code,username)
+                message = 'Poprawnie odświeżono stan otrzymanych wiadomości'
+                return flask.jsonify({'status':200,'message':message,'messages':messages})
+            else:
+                message = 'Nie można pobrać tych wiadomości'
+                return flask.jsonify({'status':400,'message':message})
         else:
             message = 'Brak zalogowanego użytkownika'
             return flask.jsonify({'status':400,'message':message})

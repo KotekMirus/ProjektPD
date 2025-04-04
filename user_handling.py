@@ -68,5 +68,4 @@ class user:
             users = json.load(file)
         accepted = users[self.username]['rooms']
         pending = users[self.username]['pending_rooms']
-        all_room_codes = accepted + pending
-        return all_room_codes
+        return accepted,pending
