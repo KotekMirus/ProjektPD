@@ -44,6 +44,33 @@ class ChatDatabase:
         with open(self.filepath, "w", encoding="utf-8") as f:
             json.dump(messages, f, ensure_ascii=False, indent=3)
 
+    def save_messages_from_server(self, message_list, autor="Inny"):
+        """
+        Zapisuje wiadomości odebrane z serwera.
+        Każda wiadomość to lista: [tresc, data]
+        """
+        messages = self.load_messages()
+        
+        # Znajdujemy najwyższy aktualny indeks
+        last_index = max(map(int, messages.keys()), default=-1) + 1
+        
+        for content, date in message_list:
+            messages[str(last_index)] = {
+                "tresc": content,
+                "autor": autor,
+                "data": date  # data pochodzi z serwera!
+            }
+            last_index += 1
+
+        # Sortujemy wszystkie wiadomości po dacie
+        sorted_msgs = sorted(messages.items(), key=lambda item: item[1]["data"])
+        messages = {str(i): msg for i, (_, msg) in enumerate(sorted_msgs)}
+
+        with open(self.filepath, "w", encoding="utf-8") as f:
+            json.dump(messages, f, ensure_ascii=False, indent=3)
+
+            
+
     def get_last_messages(self, count=5):
         #Pobiera ostatnie wiadomości rozmowy
         messages = self.load_messages()
@@ -52,6 +79,18 @@ class ChatDatabase:
 
         last_keys = sorted(map(int, messages.keys()))[-count:]
         return [messages[str(k)] for k in last_keys]
+
+
+    def simulate_server_response():
+        return {
+            "message": "Poprawnie odświeżono stan otrzymanych wiadomości",
+            "status": 200,
+            "messages": [
+                ["Hejo, mam jedną sprawę", "2025-04-04 13:10:11"],
+                ["Jest promocja na Funko Pop", "2025-04-04 13:10:48"],
+                ["Kup mi Gandalfa", "2025-04-04 13:11:23"]
+            ]
+        }
 
 # ------------------------
 """if __name__ == "__main__":
@@ -65,3 +104,9 @@ class ChatDatabase:
     # Pobieranie wiadomości
     print("Ostatnie 2 wiadomości:")
     print(chat.get_last_messages(count=3))"""
+
+"""if __name__ == "__main__":
+    chat = ChatDatabase("AktualnyUzytkownik", " Bobem")
+    response = chat.simulate_server_response()
+    if response["status"] == 200:
+        chat.save_messages_from_server(response["messages"])"""
