@@ -4,13 +4,15 @@ from ttkbootstrap.widgets import Entry, Button, Checkbutton
 from logic import ChatDatabase
 import time
 from tkinter import messagebox
+from PIL import Image, ImageTk
 
 
 class Chattersi:
-    def __init__(self, root):
-        self.root = root
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.resizable(False, False)
         self.root.title("Chattersi")
-        self.root.geometry("400x500")
+        self.root.geometry("400x550")
         self.style = Style("solar")
         self.selected_chat = tk.StringVar()
         self.root.iconbitmap('images/ikona.ico')
@@ -87,17 +89,22 @@ class Chattersi:
         entry.pack(pady=5, ipady=5)
 
         Button(self.root, text="Zweryfikuj", bootstyle="info", command=self.show_chats).pack(pady=5)
-        Button(self.root, text="Cofnij", bootstyle="danger", command=self.show_login).pack(pady=5)
+        #Button(self.root, text="Cofnij", bootstyle="danger", command=self.show_login).pack(pady=5)
 
     def show_qr(self):
         self.clear_frame()
         tk.Label(self.root, text="Zeskanuj kod QR", font=("Arial", 16)).pack(pady=10)
-        tk.Label(self.root, text="TU WYSWIETLI SIE KOD", font=("Arial", 16)).pack(pady=10)
+        #tk.Label(self.root, text="TU WYSWIETLI SIE KOD", font=("Arial", 16)).pack(pady=10)
+
+        image = Image.open("images/Kobra_qr_code.png")
+        self.qr_img = ImageTk.PhotoImage(image)  # Musi być przypisane do self, by nie zostało usunięte z pamięci
+
+        tk.Label(self.root, image=self.qr_img).pack(pady=10)
 
         tk.Label(self.root, text="Zeskanuj kod QR za pomocą aplikacji uwierzytelniającej na swoim telefonie, następnie naciśnij przycisk Dalej", font=("Arial", 11), wraplength=250).pack(pady=10)
 
         Button(self.root, text="Dalej", bootstyle="info", command=self.show_chats).pack(pady=5)
-        Button(self.root, text="Cofnij", bootstyle="danger", command=self.show_login).pack(pady=5)
+        #Button(self.root, text="Cofnij", bootstyle="danger", command=self.show_login).pack(pady=5)
 
     def show_chats(self):
         self.clear_frame()
@@ -110,8 +117,37 @@ class Chattersi:
             radio = tk.Radiobutton(frame, text=conv, variable=self.selected_chat, value=conv, font=("Arial", 12), bg="#d9edf7", anchor='w')
             radio.pack(padx=10, pady=10, anchor='w')
         
-        Button(self.root, text="Przejdź", bootstyle="info", command=self.show_check_chat).pack(pady=20)
+        Button(self.root, text="Przejdź", bootstyle="info", command=self.show_check_chat).pack(pady=5)
+        Button(self.root, text="Zaproszenia", bootstyle="success", command=self.show_invitations).pack(pady=5)
         Button(self.root, text="Wyloguj", bootstyle="danger", command=self.show_login).pack(pady=5)
+
+    def show_invitations(self):
+        self.clear_frame()
+        tk.Label(self.root, text="Zaproszenia", font=("Arial", 16)).pack(pady=10)
+
+        # Przykładowe zaproszenia
+        invitations = ["Alicja", "Tomek"]
+
+        for user in invitations:
+            frame = tk.Frame(self.root, bd=1, relief=tk.RIDGE, padx=10, pady=5)
+            frame.pack(fill=tk.X, padx=10, pady=5)
+
+            tk.Label(frame, text=f"Zaproszenie od: {user}", font=("Arial", 12)).pack(side=tk.LEFT)
+
+            btn_frame = tk.Frame(frame)
+            btn_frame.pack(side=tk.RIGHT)
+
+            Button(btn_frame, text="Akceptuj", bootstyle="success").pack(side=tk.LEFT, padx=5)
+            Button(btn_frame, text="Odrzuć", bootstyle="danger").pack(side=tk.LEFT, padx=5)
+
+        # Formularz do wysyłania zaproszenia
+        tk.Label(self.root, text="Wyślij zaproszenie do:", font=("Arial", 12)).pack(pady=(15, 5))
+        entry = Entry(self.root, width=30)
+        entry.pack(pady=5)
+        Button(self.root, text="Wyślij", bootstyle="info").pack(pady=5)
+
+        Button(self.root, text="Wróć", bootstyle="secondary", command=self.show_chats).pack(pady=15)
+
 
     def show_check_chat(self):
         if self.selected_chat.get():
@@ -184,9 +220,6 @@ class Chattersi:
             widget.destroy()
 
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.resizable(False, False)
-    app = Chattersi(root)
-    root.mainloop()
+    def run(self):
+        self.root.mainloop()
 

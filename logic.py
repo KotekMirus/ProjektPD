@@ -91,22 +91,3 @@ class ChatDatabase:
                 ["Kup mi Gandalfa", "2025-04-04 13:11:23"]
             ]
         }
-
-# ------------------------
-"""if __name__ == "__main__":
-    # Tworzy rozmowe między Janem a Anną
-    chat = ChatDatabase("Jan", "Anna")
-
-    # Zapisywanie wiadomości
-    chat.save_message("Hej, co tam?", "Jan")
-    chat.save_message("Wszystko ok, a u Ciebie?", "Anna")
-
-    # Pobieranie wiadomości
-    print("Ostatnie 2 wiadomości:")
-    print(chat.get_last_messages(count=3))"""
-
-"""if __name__ == "__main__":
-    chat = ChatDatabase("AktualnyUzytkownik", " Bobem")
-    response = chat.simulate_server_response()
-    if response["status"] == 200:
-        chat.save_messages_from_server(response["messages"])"""
