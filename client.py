@@ -3,6 +3,7 @@ import keyring
 import pyqrcode
 import pyotp
 import datetime
+import encryption_management
 
 SERVER_URL = "http://127.0.0.1:5000"
 
@@ -50,12 +51,21 @@ def verify_totp(username,totp_code):
 
 def invite(username,user):
     token = keyring.get_password('Chattersi',username)
-    response = requests.post(f"{SERVER_URL}/invite", json={"user":user,"token":token})
+    private_key,public_key = encryption_management.generate_asymmetric_keys()
+    encryption_management.save_key(private_key,user,True)
+    response = requests.post(f"{SERVER_URL}/invite", json={"user":user,"key":public_key,"token":token})
     return response.json()
 
 def reply_to_invitation(username,user,decision):
     token = keyring.get_password('Chattersi',username)
     response = requests.post(f"{SERVER_URL}/decide", json={"user":user,"decision":decision,"token":token})
+    if 'key' in list(response.json().keys()):
+        encryption_management.save_key((response.json())['key'],user,True)
+        symmetric_key = encryption_management.generate_symmetric_key()
+        encryption_management.save_key(symmetric_key,user,False)
+        encrypted_symmetric_key = encryption_management.encrypt_message_asymmetric(encryption_management.get_key(user,True),symmetric_key)
+        next_response = requests.post(f"{SERVER_URL}/addkey", json={"user":user,"key":encrypted_symmetric_key,"token":token})
+        encryption_management.delete_tmp_key(user)
     return response.json()
 
 def get_chat_members(username,room_type):
@@ -66,6 +76,10 @@ def get_chat_members(username,room_type):
 def get_room_code(username,user):
     token = keyring.get_password('Chattersi',username)
     response = requests.post(f"{SERVER_URL}/getcode", json={"user":user,"token":token})
+    if 'key' in list(response.json().keys()):
+        symmetric_key = encryption_management.decrypt_message_asymmetric(encryption_management.get_key(user,True),(response.json())['key'])
+        encryption_management.delete_tmp_key(user)
+        encryption_management.save_key(symmetric_key,user,False)
     return response.json()
 
 def send_message(username,room_code,message):

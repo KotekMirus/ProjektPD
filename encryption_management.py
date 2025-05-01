@@ -49,6 +49,19 @@ def save_key(key,user,tmp):
     with open(filename,'w') as file:
         json.dump(all_keys, file, indent = 3)
 
+def get_key(user,tmp):
+    check_structure_existence()
+    filename = None
+    if tmp:
+        filename = 'data/tmp_keys.json'
+    else:
+        filename = 'data/keys.json'
+    all_keys = None
+    with open(filename,'r') as file:
+        all_keys = json.load(file)
+    found_key = all_keys[user]
+    return found_key
+
 def delete_tmp_key(user):
     check_structure_existence()
     all_keys = None
