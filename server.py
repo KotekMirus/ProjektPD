@@ -139,15 +139,10 @@ def return_all_messages(room_code,receiver):
     rooms = None
     with open('data/rooms.json','r') as file:
         rooms = json.load(file)
-    print(rooms)
     members = rooms[room_code]['members']
-    print(members)
     author = ([member for member in members if member != receiver])[0]
-    print(author)
     messages = rooms[room_code][author]
-    print(messages)
     rooms[room_code][author] = []
-    print(rooms)
     with open('data/rooms.json','w') as file:
         json.dump(rooms, file, indent = 3)
     return messages
