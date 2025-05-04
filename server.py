@@ -405,9 +405,10 @@ def get_room_code():
             room_code,author,encryption_key = find_room(username,remote_user)
             if room_code is not None:
                 message = 'Poprawnie znaleziono kod rozmowy z podanym użytkownikiem'
-                symmetric_key = get_key_from_room(room_code)
-                if symmetric_key != None:
-                    return flask.jsonify({'status':200,'message':message,'room_code':room_code,'key':symmetric_key})
+                if username == author:
+                    symmetric_key = get_key_from_room(room_code)
+                    if symmetric_key != None:
+                        return flask.jsonify({'status':200,'message':message,'room_code':room_code,'key':symmetric_key})
                 return flask.jsonify({'status':200,'message':message,'room_code':room_code})
             else:
                 message = 'Brak rozmowy z podanym użytkownikiem'
