@@ -3,17 +3,14 @@ import os
 from datetime import datetime
 
 class ChatDatabase:
-    def __init__(self, user1, user2, directory="message"):
+    def __init__(self, user1, user2):
         #Tworzy plik rozmowy między user1 i user2.
-        
-        # Pobranie ścieżki do katalogu, w którym jest uruchomiony skrypt
-        base_dir = os.path.dirname(os.path.abspath(__file__))  
-        self.directory = os.path.join(base_dir, "message")  # Folder "message" w katalogu aplikacji
+        self.directory = "messages"  # Folder "messages" w katalogu aplikacji
         self.filename = f"{min(user1, user2)}_{max(user1, user2)}.json"
         self.filepath = os.path.join(self.directory, self.filename)
 
         if not os.path.exists(self.directory):
-            os.makedirs(self.directory)  # Tworzy folder 'message', jeśli nie istnieje
+            os.makedirs(self.directory)  # Tworzy folder 'messages', jeśli nie istnieje
 
         if not os.path.exists(self.filepath):
             self._initialize_file()

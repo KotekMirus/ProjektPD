@@ -223,7 +223,7 @@ class Chattersi:
         self.show_chats()
 
     def load_chat_history(self):
-        messages = self.chat_db.get_last_messages(50)
+        messages = self.chat_db.get_last_messages(100)
         # Odblokowanie pola
         self.chat_box.config(state="normal")  
         self.chat_box.delete("1.0", tk.END)  # Wyczyść pole tekstowe
