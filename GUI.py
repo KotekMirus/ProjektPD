@@ -6,6 +6,7 @@ import time
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import client
+import os
 
 class Chattersi:
     def __init__(self):
@@ -111,18 +112,33 @@ class Chattersi:
         self.qr_img = ImageTk.PhotoImage(image)  # Musi być przypisane do self, by nie zostało usunięte z pamięci
         tk.Label(self.root, image=self.qr_img).pack(pady=10)
         tk.Label(self.root, text="Zeskanuj kod QR za pomocą aplikacji uwierzytelniającej na swoim telefonie, następnie naciśnij przycisk Dalej", font=("Arial", 11), wraplength=250).pack(pady=10)
-        Button(self.root, text="Dalej", bootstyle="info", command=self.show_chats).pack(pady=5)
+        Button(self.root, text="Dalej", bootstyle="info", command=self.confirm_totp_scanning).pack(pady=5)
         #Button(self.root, text="Cofnij", bootstyle="danger", command=self.show_login).pack(pady=5)
+
+    def confirm_totp_scanning(self):
+        if os.path.isfile(f"images/{self.username}_qr_code.png"):
+            os.remove(f"images/{self.username}_qr_code.png")
+        self.show_chats()
 
     def show_chats(self):
         self.clear_frame()
-        status,users = client.get_chat_members(self.username,'chats')
+        status, users = client.get_chat_members(self.username, 'chats')
         tk.Label(self.root, text="Wybierz rozmowę", font=("Arial", 16)).pack(pady=10)
-        conversations = ["Rozmowa z "+user for user in users]
+        container = tk.Frame(self.root)
+        container.pack(fill=tk.BOTH, expand=True)
+        canvas = tk.Canvas(container)
+        scrollbar = tk.Scrollbar(container, orient="vertical", command=canvas.yview)
+        scrollable_frame = tk.Frame(canvas)
+        scrollable_frame.bind("<Configure>",lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+        conversations = ["Rozmowa z " + user for user in users]
         for conv in conversations:
-            frame = tk.Frame(self.root, bg="#d9edf7", bd=2, relief=tk.RIDGE)
+            frame = tk.Frame(scrollable_frame, bg="#d9edf7", bd=2, relief=tk.RIDGE)
             frame.pack(fill=tk.X, padx=20, pady=5)
-            radio = tk.Radiobutton(frame, text=conv, variable=self.selected_chat, value=conv, font=("Arial", 12), bg="#d9edf7", anchor='w')
+            radio = tk.Radiobutton(frame,text=conv,variable=self.selected_chat,value=conv,font=("Arial", 12),bg="#d9edf7",anchor='w')
             radio.pack(padx=10, pady=10, anchor='w')
         Button(self.root, text="Przejdź", bootstyle="info", command=self.show_check_chat).pack(pady=5)
         Button(self.root, text="Zaproszenia", bootstyle="success", command=self.show_invitations).pack(pady=5)
@@ -143,8 +159,8 @@ class Chattersi:
             tk.Label(frame, text=f"Zaproszenie od: {user}", font=("Arial", 12)).pack(side=tk.LEFT)
             btn_frame = tk.Frame(frame)
             btn_frame.pack(side=tk.RIGHT)
-            Button(btn_frame, text="Akceptuj", bootstyle="success", command=lambda: self.reply_to_invitation(user,'accept')).pack(side=tk.LEFT, padx=5)
-            Button(btn_frame, text="Odrzuć", bootstyle="danger", command=lambda: self.reply_to_invitation(user,'decline')).pack(side=tk.LEFT, padx=5)
+            Button(btn_frame, text="Akceptuj", bootstyle="success", command=lambda u=user: self.reply_to_invitation(u, 'accept')).pack(side=tk.LEFT, padx=5)
+            Button(btn_frame, text="Odrzuć", bootstyle="danger", command=lambda u=user: self.reply_to_invitation(u, 'decline')).pack(side=tk.LEFT, padx=5)
         # Formularz do wysyłania zaproszenia
         tk.Label(self.root, text="Wyślij zaproszenie do:", font=("Arial", 12)).pack(pady=(15, 5))
         entry = Entry(self.root, width=30)

@@ -5,10 +5,10 @@ import pyotp
 import datetime
 import encryption_management
 
-SERVER_URL = "http://127.0.0.1:5000"
+SERVER_URL = "https://127.0.0.1:5000"
 
 def register(username,password):
-    response = requests.post(f"{SERVER_URL}/register",json={"username":username,"password":password})
+    response = requests.post(f"{SERVER_URL}/register",json={"username":username,"password":password},verify=False)
     if 'token' in list(response.json().keys()):
         try:
             keyring.delete_password("Chattersi",username)
@@ -23,7 +23,7 @@ def register(username,password):
     return response.json()['status']
 
 def login(username,password):
-    response = requests.post(f"{SERVER_URL}/login",json={"username":username,"password":password})
+    response = requests.post(f"{SERVER_URL}/login",json={"username":username,"password":password},verify=False)
     if 'token' in list(response.json().keys()):
         try:
             keyring.delete_password("Chattersi",username)
@@ -40,7 +40,7 @@ def logout(username):
 
 def verify_totp(username,totp_code):
     token = keyring.get_password('Chattersi',username)
-    response = requests.post(f"{SERVER_URL}/totp",json={"totp_code":totp_code,"token":token})
+    response = requests.post(f"{SERVER_URL}/totp",json={"totp_code":totp_code,"token":token},verify=False)
     if 'token' in list(response.json().keys()):
         try:
             keyring.delete_password("Chattersi",username)
@@ -53,30 +53,30 @@ def invite(username,user):
     token = keyring.get_password('Chattersi',username)
     private_key,public_key = encryption_management.generate_asymmetric_keys()
     encryption_management.save_key(private_key,user,True)
-    response = requests.post(f"{SERVER_URL}/invite", json={"user":user,"key":public_key,"token":token})
+    response = requests.post(f"{SERVER_URL}/invite", json={"user":user,"key":public_key,"token":token},verify=False)
     return response.json()['status']
 
 def reply_to_invitation(username,user,decision):
     token = keyring.get_password('Chattersi',username)
-    response = requests.post(f"{SERVER_URL}/decide", json={"user":user,"decision":decision,"token":token})
+    response = requests.post(f"{SERVER_URL}/decide", json={"user":user,"decision":decision,"token":token},verify=False)
     if 'key' in list(response.json().keys()):
         encryption_management.save_key((response.json())['key'],user,True)
         symmetric_key = encryption_management.generate_symmetric_key()
         encryption_management.save_key(symmetric_key,user,False)
         encrypted_symmetric_key = encryption_management.encrypt_message_asymmetric(encryption_management.get_key(user,True),symmetric_key)
-        next_response = requests.post(f"{SERVER_URL}/addkey", json={"user":user,"key":encrypted_symmetric_key,"token":token})
+        next_response = requests.post(f"{SERVER_URL}/addkey", json={"user":user,"key":encrypted_symmetric_key,"token":token},verify=False)
         encryption_management.delete_tmp_key(user)
         return next_response.json()['status']
     return response.json()['status']
 
 def get_chat_members(username,room_type):
     token = keyring.get_password('Chattersi',username)
-    response = requests.post(f"{SERVER_URL}/getrooms", json={"room_type":room_type,"token":token})
+    response = requests.post(f"{SERVER_URL}/getrooms", json={"room_type":room_type,"token":token},verify=False)
     return response.json()['status'],response.json()['users']
 
 def get_room_code(username,user):
     token = keyring.get_password('Chattersi',username)
-    response = requests.post(f"{SERVER_URL}/getcode", json={"user":user,"token":token})
+    response = requests.post(f"{SERVER_URL}/getcode", json={"user":user,"token":token},verify=False)
     if 'key' in list(response.json().keys()):
         symmetric_key = encryption_management.decrypt_message_asymmetric(encryption_management.get_key(user,True),(response.json())['key'])
         encryption_management.delete_tmp_key(user)
@@ -87,12 +87,12 @@ def send_message(username,room_code,user,message):
     token = keyring.get_password('Chattersi',username)
     symmetric_key = encryption_management.get_key(user,False)
     final_message = [encryption_management.encrypt_message_symmetric(symmetric_key,message),str(datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"))]
-    response = requests.post(f"{SERVER_URL}/send", json={"room_code":room_code,"message":final_message,"token":token})
+    response = requests.post(f"{SERVER_URL}/send", json={"room_code":room_code,"message":final_message,"token":token},verify=False)
     return response.json()['status']
 
 def get_messages(username,room_code,user):
     token = keyring.get_password('Chattersi',username)
     symmetric_key = encryption_management.get_key(user,False)
-    response = requests.post(f"{SERVER_URL}/get", json={"room_code":room_code,"token":token})
+    response = requests.post(f"{SERVER_URL}/get", json={"room_code":room_code,"token":token},verify=False)
     messages = [[encryption_management.decrypt_message_symmetric(symmetric_key,message),timestamp] for message,timestamp in (response.json())['messages']]
     return response.json()['status'],messages

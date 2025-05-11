@@ -475,4 +475,4 @@ def get_messages():
             return flask.jsonify({'status':400,'message':message})
 
 def run_server():
-    app.run()
+    app.run(host="127.0.0.1", port=5000, ssl_context='adhoc')
