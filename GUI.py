@@ -153,20 +153,29 @@ class Chattersi:
         self.clear_frame()
         status,invitations = client.get_chat_members(self.username,'invitations')
         tk.Label(self.root, text="Zaproszenia", font=("Arial", 16)).pack(pady=10)
+        tk.Label(self.root, text="Wyślij zaproszenie do:", font=("Arial", 12)).pack(pady=(15, 5))
+        entry = Entry(self.root, width=30)
+        entry.pack(pady=5)
+        Button(self.root, text="Wyślij", bootstyle="info", command=lambda: client.invite(self.username,entry.get())).pack(pady=5)
+        Button(self.root, text="Wróć", bootstyle="secondary", command=self.show_chats).pack(pady=15)
+        container = tk.Frame(self.root)
+        container.pack(fill=tk.BOTH, expand=True)
+        canvas = tk.Canvas(container)
+        scrollbar = tk.Scrollbar(container, orient="vertical", command=canvas.yview)
+        scrollable_frame = tk.Frame(canvas)
+        scrollable_frame.bind("<Configure>",lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
         for user in invitations:
-            frame = tk.Frame(self.root, bd=1, relief=tk.RIDGE, padx=10, pady=5)
+            frame = tk.Frame(scrollable_frame, bd=1, relief=tk.RIDGE, padx=10, pady=5)
             frame.pack(fill=tk.X, padx=10, pady=5)
             tk.Label(frame, text=f"Zaproszenie od: {user}", font=("Arial", 12)).pack(side=tk.LEFT)
             btn_frame = tk.Frame(frame)
             btn_frame.pack(side=tk.RIGHT)
             Button(btn_frame, text="Akceptuj", bootstyle="success", command=lambda u=user: self.reply_to_invitation(u, 'accept')).pack(side=tk.LEFT, padx=5)
             Button(btn_frame, text="Odrzuć", bootstyle="danger", command=lambda u=user: self.reply_to_invitation(u, 'decline')).pack(side=tk.LEFT, padx=5)
-        # Formularz do wysyłania zaproszenia
-        tk.Label(self.root, text="Wyślij zaproszenie do:", font=("Arial", 12)).pack(pady=(15, 5))
-        entry = Entry(self.root, width=30)
-        entry.pack(pady=5)
-        Button(self.root, text="Wyślij", bootstyle="info", command=lambda: client.invite(self.username,entry.get())).pack(pady=5)
-        Button(self.root, text="Wróć", bootstyle="secondary", command=self.show_chats).pack(pady=15)
 
     def reply_to_invitation(self,user,decision):
         client.reply_to_invitation(self.username,user,decision)
@@ -205,6 +214,7 @@ class Chattersi:
         Button(frame, text="Wyślij", bootstyle="info", command=self.send_message).pack(side=tk.RIGHT, padx=5)
         #self.chat_db.save_message("Hej, to testowa wiadomość od Boba!", "Bob")
         self.load_chat_history()  # Odśwież widok czatu
+        self.chat_box.see("end")
         self.root.after(1000,self.get_new_messages)
 
     def end_chat(self):
@@ -213,7 +223,7 @@ class Chattersi:
         self.show_chats()
 
     def load_chat_history(self):
-        messages = self.chat_db.get_last_messages(10)
+        messages = self.chat_db.get_last_messages(50)
         # Odblokowanie pola
         self.chat_box.config(state="normal")  
         self.chat_box.delete("1.0", tk.END)  # Wyczyść pole tekstowe
@@ -226,13 +236,15 @@ class Chattersi:
             self.chat_box.insert(tk.END, f"{msg['tresc']}\n\n")  # Wiadomość i odstęp
         # Zablokowanie edycji pola (czat jest tylko do odczytu)
         self.chat_box.config(state="disabled") 
-        self.chat_box.see("end")  # Przewiń do ostatniej wiadomości
 
     def get_new_messages(self):
         status,messages = client.get_messages(self.username,self.current_room_code,self.current_roommate)
         if status == 200:
             self.chat_db.save_messages_from_server(messages,self.current_roommate)
-            self.load_chat_history()
+            at_bottom = self.chat_box.yview()[1] == 1.0
+            if at_bottom:
+                self.load_chat_history()
+                self.chat_box.see("end")  # Przewiń do ostatniej wiadomości
         self.root.after(1000,self.get_new_messages)
 
     def send_message(self):
@@ -244,6 +256,7 @@ class Chattersi:
             self.chat_db.save_message(tresc,self.username)  # Zapisz wiadomość
             self.chat_input.delete(0, tk.END)  # Wyczyść pole tekstowe
             self.load_chat_history()  # Odśwież okno czatu
+            self.chat_box.see("end")  # Przewiń do ostatniej wiadomości
 
     def clear_frame(self):
         for widget in self.root.winfo_children():
