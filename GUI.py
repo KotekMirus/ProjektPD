@@ -1,6 +1,7 @@
 import tkinter as tk
 from ttkbootstrap import Style
 from ttkbootstrap.widgets import Entry, Button, Checkbutton
+from ttkbootstrap.widgets import Label as WarningLabel
 from logic import ChatDatabase
 import time
 from tkinter import messagebox
@@ -49,6 +50,7 @@ class Chattersi:
             self.show_totp()
         else:
             self.show_login()
+            WarningLabel(self.root, text="Nieprawidłowe dane logowania", bootstyle="danger", wraplength=380, font=("Arial", 12)).pack(pady=1)
     
     def show_register(self):
         self.clear_frame()
@@ -85,6 +87,9 @@ class Chattersi:
                 self.show_qr()
             else:
                 self.show_register()
+                WarningLabel(self.root, text="Nie można zarejestrować użytkownika o podanej nazwie lub o podanym haśle. Nazwa nie może być zajęta i musi zawierać od 3 do 32 znaków. Hasło musi zawierać od 12 do 64 znaków", bootstyle="danger", wraplength=380, font=("Arial", 12)).pack(pady=1)
+        else:
+            WarningLabel(self.root, text="Oba wprowadzone hasła muszą być takie same", bootstyle="danger", wraplength=380, font=("Arial", 12)).pack(pady=1)
 
     def show_totp(self):
         self.clear_frame()
@@ -103,6 +108,7 @@ class Chattersi:
             self.show_chats()
         else:
             self.show_totp()
+            WarningLabel(self.root, text="Nieprawidłowy kod TOTP", bootstyle="danger", wraplength=380, font=("Arial", 12)).pack(pady=1)
 
     def show_qr(self):
         self.clear_frame()
@@ -156,7 +162,7 @@ class Chattersi:
         tk.Label(self.root, text="Wyślij zaproszenie do:", font=("Arial", 12)).pack(pady=(15, 5))
         entry = Entry(self.root, width=30)
         entry.pack(pady=5)
-        Button(self.root, text="Wyślij", bootstyle="info", command=lambda: client.invite(self.username,entry.get())).pack(pady=5)
+        Button(self.root, text="Wyślij", bootstyle="info", command=lambda: self.invite(entry.get())).pack(pady=5)
         Button(self.root, text="Wróć", bootstyle="secondary", command=self.show_chats).pack(pady=15)
         container = tk.Frame(self.root)
         container.pack(fill=tk.BOTH, expand=True)
@@ -177,6 +183,13 @@ class Chattersi:
             Button(btn_frame, text="Akceptuj", bootstyle="success", command=lambda u=user: self.reply_to_invitation(u, 'accept')).pack(side=tk.LEFT, padx=5)
             Button(btn_frame, text="Odrzuć", bootstyle="danger", command=lambda u=user: self.reply_to_invitation(u, 'decline')).pack(side=tk.LEFT, padx=5)
 
+    def invite(self,user):
+        status = client.invite(self.username,user)
+        if status == 200:
+            tk.messagebox.showinfo("Zaproszenie", "Zaproszenie zostało pomyślnie wysłane")
+        else:
+            tk.messagebox.showwarning("Zaproszenie", "Nie udało się wysłać zaproszenia. Podany użytkownik nie istnieje")
+
     def reply_to_invitation(self,user,decision):
         client.reply_to_invitation(self.username,user,decision)
         self.show_invitations()
@@ -190,7 +203,7 @@ class Chattersi:
                 self.current_roommate = roommate
                 self.show_chat()
             else:
-                tk.messagebox.showwarning("Brak dostępu do wybranej rozmowy")
+                tk.messagebox.showwarning("Brak dostępu", "Brak dostępu do wybranej rozmowy")
         else:
             tk.messagebox.showwarning("Brak wyboru", "Wybierz rozmowę by kontynuować")
 
