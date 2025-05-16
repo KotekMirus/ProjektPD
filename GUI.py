@@ -6,6 +6,7 @@ from logic import ChatDatabase
 import time
 from tkinter import messagebox
 from PIL import Image, ImageTk
+import datetime
 import client
 import os
 
@@ -264,9 +265,10 @@ class Chattersi:
         tresc = self.chat_input.get().strip()
         if not tresc.strip():
             return  # Nie wysyłaj pustych wiadomości
-        status = client.send_message(self.username,self.current_room_code,self.current_roommate,tresc)
+        message_date = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        status = client.send_message(self.username,self.current_room_code,self.current_roommate,tresc,message_date)
         if status == 200:
-            self.chat_db.save_message(tresc,self.username)  # Zapisz wiadomość
+            self.chat_db.save_message(tresc,message_date,self.username)  # Zapisz wiadomość
             self.chat_input.delete(0, tk.END)  # Wyczyść pole tekstowe
             self.load_chat_history()  # Odśwież okno czatu
             self.chat_box.see("end")  # Przewiń do ostatniej wiadomości

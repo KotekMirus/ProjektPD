@@ -2,7 +2,6 @@ import requests
 import keyring
 import pyqrcode
 import pyotp
-import datetime
 import encryption_management
 
 SERVER_URL = "https://127.0.0.1:5000"
@@ -83,10 +82,10 @@ def get_room_code(username,user):
         encryption_management.save_key(symmetric_key,user,False)
     return response.json()['status'],response.json()['room_code']
 
-def send_message(username,room_code,user,message):
+def send_message(username,room_code,user,message,date):
     token = keyring.get_password('Chattersi',username)
     symmetric_key = encryption_management.get_key(user,False)
-    final_message = [encryption_management.encrypt_message_symmetric(symmetric_key,message),str(datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"))]
+    final_message = [encryption_management.encrypt_message_symmetric(symmetric_key,message),date]
     response = requests.post(f"{SERVER_URL}/send", json={"room_code":room_code,"message":final_message,"token":token},verify=False)
     return response.json()['status']
 

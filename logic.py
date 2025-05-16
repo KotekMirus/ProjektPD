@@ -1,6 +1,5 @@
 import json
 import os
-from datetime import datetime
 
 class ChatDatabase:
     def __init__(self, user1, user2):
@@ -25,7 +24,7 @@ class ChatDatabase:
         with open(self.filepath, "r", encoding="utf-8") as f:
             return json.load(f)
 
-    def save_message(self, tresc, autor):
+    def save_message(self, tresc, data, autor):
         #Zapisuje nową wiadomość do pliku rozmowy
         messages = self.load_messages()
         
@@ -35,7 +34,7 @@ class ChatDatabase:
         messages[str(last_index)] = {
             "tresc": tresc,
             "autor": autor,
-            "data": datetime.now().strftime("%d-%m-%Y %H:%M:%S")  # Aktualna data
+            "data": data  # Aktualna data
         }
 
         with open(self.filepath, "w", encoding="utf-8") as f:

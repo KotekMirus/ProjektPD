@@ -2,14 +2,11 @@
 Projekt na studia drugiego stopnia. Przedmiot: Programowanie defensywne.  
 Temat: Bezpieczny komunikator internetowy "Chattersi".
 
-Uruchamianie:
-* server  
-python main.py server
-* client  
-python main.py client
+Uruchamianie:  
+Aby uruchomić aplikację, należy skorzystać z pliku run.bat. Skrypt ten automatycznie tworzy folder all, odtwarza wymaganą strukturę katalogów oraz umieszcza tam dane serwera oraz obu użytkowników.
+
+Testowanie:  
+Aby uruchomić testy, należy skorzystać z pliku run_tests.bat. Skrypt ten automatycznie tworzy niezbędne zasoby w katalogach data oraz images, przeprowadza testy, a następnie usuwa dane tymczasowe wygenerowane w trakcie testów.
 
 Uwaga!  
-Różnych użytkowników należy uruchamiać w odrębnych folderach, aby nie nadpisywali sobie nawzajem plików z kluczami.
-
-Alternatywny sposób uruchomienia:  
-Uruchomić plik run.bat - utworzy on folder 'all' a w nim dane serwera i obu użytkowników wraz z wymaganą strukturą folderów.
+Testy są wrażliwe na strukturę ścieżek, dlatego nie należy uruchamiać ich ręcznie z przypadkowych lokalizacji. Zaleca się korzystanie wyłącznie z dostarczonego skryptu run_tests.bat.
