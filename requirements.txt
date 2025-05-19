@@ -30,6 +30,7 @@ pyotp==2.9.0
 pypng==0.20220715.0
 PyQRCode==1.2.1
 pytest==8.3.5
+pytest-mock==3.14.0
 pywin32-ctypes==0.2.3
 requests==2.32.3
 ttkbootstrap==1.12.2
