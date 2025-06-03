@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html lang="pl" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Chattersi - dokumentacja &#8212; Chattersi 0.1 - dokumentacja</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=e6b3e68e"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=2827c288"></script>
+    <link rel="index" title="Indeks" href="genindex.html" />
+    <link rel="search" title="Szukaj" href="search.html" />
+    <link rel="next" title="encryption_management module" href="encryption_management.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="chattersi-dokumentacja">
+<h1>Chattersi - dokumentacja<a class="headerlink" href="#chattersi-dokumentacja" title="Link to this heading">¶</a></h1>
+<p>Bezpieczny komunikator internetowy Chattersi. Pozwala na prowadzenie rozmów między dwoma użytkownikami.
+Zapewnia uwierzytelnianie dwuskładnikowe (wykorzystanie TOTP) oraz przechowywanie wiadomości jedynie na
+urządzeniach użytkowników. Pozwala na prowadzenie wielu konwersacji w ramach jednego konta.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Elementy Aplikacji:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="encryption_management.html">encryption_management module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="encryption_management.html#encryption_management.check_structure_existence"><code class="docutils literal notranslate"><span class="pre">check_structure_existence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="encryption_management.html#encryption_management.decrypt_message_asymmetric"><code class="docutils literal notranslate"><span class="pre">decrypt_message_asymmetric()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="encryption_management.html#encryption_management.decrypt_message_symmetric"><code class="docutils literal notranslate"><span class="pre">decrypt_message_symmetric()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="encryption_management.html#encryption_management.delete_tmp_key"><code class="docutils literal notranslate"><span class="pre">delete_tmp_key()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="encryption_management.html#encryption_management.encrypt_message_asymmetric"><code class="docutils literal notranslate"><span class="pre">encrypt_message_asymmetric()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="encryption_management.html#encryption_management.encrypt_message_symmetric"><code class="docutils literal notranslate"><span class="pre">encrypt_message_symmetric()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="encryption_management.html#encryption_management.generate_asymmetric_keys"><code class="docutils literal notranslate"><span class="pre">generate_asymmetric_keys()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="encryption_management.html#encryption_management.generate_symmetric_key"><code class="docutils literal notranslate"><span class="pre">generate_symmetric_key()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="encryption_management.html#encryption_management.get_key"><code class="docutils literal notranslate"><span class="pre">get_key()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="encryption_management.html#encryption_management.save_key"><code class="docutils literal notranslate"><span class="pre">save_key()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_handling.html">user_handling module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_handling.html#user_handling.user"><code class="docutils literal notranslate"><span class="pre">user</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_handling.html#user_handling.user.add_to_pending_room"><code class="docutils literal notranslate"><span class="pre">user.add_to_pending_room()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_handling.html#user_handling.user.check_structure_existence"><code class="docutils literal notranslate"><span class="pre">user.check_structure_existence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_handling.html#user_handling.user.get_room_codes"><code class="docutils literal notranslate"><span class="pre">user.get_room_codes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_handling.html#user_handling.user.register"><code class="docutils literal notranslate"><span class="pre">user.register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_handling.html#user_handling.user.save"><code class="docutils literal notranslate"><span class="pre">user.save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_handling.html#user_handling.user.verify"><code class="docutils literal notranslate"><span class="pre">user.verify()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_handling.html#user_handling.user.verify_totp"><code class="docutils literal notranslate"><span class="pre">user.verify_totp()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">client module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="client.html#client.get_chat_members"><code class="docutils literal notranslate"><span class="pre">get_chat_members()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#client.get_messages"><code class="docutils literal notranslate"><span class="pre">get_messages()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#client.get_room_code"><code class="docutils literal notranslate"><span class="pre">get_room_code()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#client.invite"><code class="docutils literal notranslate"><span class="pre">invite()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#client.login"><code class="docutils literal notranslate"><span class="pre">login()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#client.logout"><code class="docutils literal notranslate"><span class="pre">logout()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#client.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#client.reply_to_invitation"><code class="docutils literal notranslate"><span class="pre">reply_to_invitation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#client.send_message"><code class="docutils literal notranslate"><span class="pre">send_message()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#client.verify_totp"><code class="docutils literal notranslate"><span class="pre">verify_totp()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">server module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.add_key_to_room"><code class="docutils literal notranslate"><span class="pre">add_key_to_room()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.add_symmetric_key_to_room"><code class="docutils literal notranslate"><span class="pre">add_symmetric_key_to_room()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.check_rooms_file_existence"><code class="docutils literal notranslate"><span class="pre">check_rooms_file_existence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.check_totp"><code class="docutils literal notranslate"><span class="pre">check_totp()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.create_jwt"><code class="docutils literal notranslate"><span class="pre">create_jwt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.decode_jwt"><code class="docutils literal notranslate"><span class="pre">decode_jwt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.find_all_user_rooms"><code class="docutils literal notranslate"><span class="pre">find_all_user_rooms()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.find_room"><code class="docutils literal notranslate"><span class="pre">find_room()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.generate_room_code"><code class="docutils literal notranslate"><span class="pre">generate_room_code()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.get_key_from_room"><code class="docutils literal notranslate"><span class="pre">get_key_from_room()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.get_messages"><code class="docutils literal notranslate"><span class="pre">get_messages()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.get_room_code"><code class="docutils literal notranslate"><span class="pre">get_room_code()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.get_roommates"><code class="docutils literal notranslate"><span class="pre">get_roommates()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.get_rooms"><code class="docutils literal notranslate"><span class="pre">get_rooms()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.get_rooms_codes"><code class="docutils literal notranslate"><span class="pre">get_rooms_codes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.invite"><code class="docutils literal notranslate"><span class="pre">invite()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.login"><code class="docutils literal notranslate"><span class="pre">login()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.reply_to_invitation"><code class="docutils literal notranslate"><span class="pre">reply_to_invitation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.return_all_messages"><code class="docutils literal notranslate"><span class="pre">return_all_messages()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.run_server"><code class="docutils literal notranslate"><span class="pre">run_server()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.save_room"><code class="docutils literal notranslate"><span class="pre">save_room()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.save_sent_message"><code class="docutils literal notranslate"><span class="pre">save_sent_message()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server.send_message"><code class="docutils literal notranslate"><span class="pre">send_message()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="logic.html">logic module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="logic.html#logic.ChatDatabase"><code class="docutils literal notranslate"><span class="pre">ChatDatabase</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="logic.html#logic.ChatDatabase.get_last_messages"><code class="docutils literal notranslate"><span class="pre">ChatDatabase.get_last_messages()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logic.html#logic.ChatDatabase.load_messages"><code class="docutils literal notranslate"><span class="pre">ChatDatabase.load_messages()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logic.html#logic.ChatDatabase.save_message"><code class="docutils literal notranslate"><span class="pre">ChatDatabase.save_message()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logic.html#logic.ChatDatabase.save_messages_from_server"><code class="docutils literal notranslate"><span class="pre">ChatDatabase.save_messages_from_server()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">GUI module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html#GUI.Chattersi"><code class="docutils literal notranslate"><span class="pre">Chattersi</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.clear_frame"><code class="docutils literal notranslate"><span class="pre">Chattersi.clear_frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.confirm_totp_scanning"><code class="docutils literal notranslate"><span class="pre">Chattersi.confirm_totp_scanning()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.end_chat"><code class="docutils literal notranslate"><span class="pre">Chattersi.end_chat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.get_new_messages"><code class="docutils literal notranslate"><span class="pre">Chattersi.get_new_messages()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.invite"><code class="docutils literal notranslate"><span class="pre">Chattersi.invite()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.load_chat_history"><code class="docutils literal notranslate"><span class="pre">Chattersi.load_chat_history()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.login"><code class="docutils literal notranslate"><span class="pre">Chattersi.login()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.logout"><code class="docutils literal notranslate"><span class="pre">Chattersi.logout()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.register"><code class="docutils literal notranslate"><span class="pre">Chattersi.register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.reply_to_invitation"><code class="docutils literal notranslate"><span class="pre">Chattersi.reply_to_invitation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.run"><code class="docutils literal notranslate"><span class="pre">Chattersi.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.send_message"><code class="docutils literal notranslate"><span class="pre">Chattersi.send_message()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.show_chat"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_chat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.show_chats"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_chats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.show_check_chat"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_check_chat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.show_invitations"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_invitations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.show_login"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_login()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.show_qr"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_qr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.show_register"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.show_totp"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_totp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.Chattersi.verify_totp"><code class="docutils literal notranslate"><span class="pre">Chattersi.verify_totp()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Chattersi</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Szukaj" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Nawigacja</h3>
+<p class="caption" role="heading"><span class="caption-text">Elementy Aplikacji:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="encryption_management.html">encryption_management module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_handling.html">user_handling module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">client module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">server module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logic.html">logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">GUI module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="encryption_management.html" title="następny rozdział">encryption_management module</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Mateusz Kozdęba, Zuzanna Klimczyk.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html lang="pl" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>client module &#8212; Chattersi 0.1 - dokumentacja</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=e6b3e68e"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=2827c288"></script>
+    <link rel="index" title="Indeks" href="genindex.html" />
+    <link rel="search" title="Szukaj" href="search.html" />
+    <link rel="next" title="server module" href="server.html" />
+    <link rel="prev" title="user_handling module" href="user_handling.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-client">
+<span id="client-module"></span><h1>client module<a class="headerlink" href="#module-client" title="Link to this heading">¶</a></h1>
+<p>Moduł zawierający logikę klienta. Odpowiada za wysyłanie żądań do serwera w celu rejestracji, logowania,
+zarządzania zaproszeniami oraz prowadzenia rozmów. Funkcje obsługują dołączanie wymaganych danych do żądań,
+zarządzanie tokenami JWT zapisanymi lokalnie (np. w Windows Credentials) oraz wymianę kluczy szyfrujących.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="client.get_chat_members">
+<span class="sig-prename descclassname"><span class="pre">client.</span></span><span class="sig-name descname"><span class="pre">get_chat_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#client.get_chat_members" title="Link to this definition">¶</a></dt>
+<dd><p>Wysyła żądanie do serwera zawierające typ pokoju («chats» - rozmowy, «invitations» - zaproszenia) oraz token JWT potwierdzający
+tożsamość użytkownika. Celem żądania jest uzyskanie listy nazw użytkowników zaproszonych lub będących częścią już zaakceptowanych
+rozmów.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – Nazwa użytkownika.</p></li>
+<li><p><strong>room_type</strong> – Typ pokoju («chats» - rozmowy, «invitations» - zaproszenia).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status odpowiedzi serwera (200 - sukces, 400 - błąd) oraz lista nazw użytkowników zaproszonych lub będących częścią rozmów.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="client.get_messages">
+<span class="sig-prename descclassname"><span class="pre">client.</span></span><span class="sig-name descname"><span class="pre">get_messages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#client.get_messages" title="Link to this definition">¶</a></dt>
+<dd><p>Wysyła żądanie do serwera zawierające identyfikator rozmowy, nazwę użytkownika, który jest autorem odbieranych wiadomości oraz token JWT
+potwierdzający tożsamość użytkownika. Celem żądania jest uzyskanie listy list, gdzie każda pomniejsza lista zawiera wiadomość zaszyfrowaną
+kluczem symetrycznym oraz datę wysłania tej wiadomości.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – Nazwa użytkownika.</p></li>
+<li><p><strong>room_code</strong> – Identyfikator rozmowy.</p></li>
+<li><p><strong>user</strong> – Nazwa użytkownika, który jest nadawcą wiadomości.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status odpowiedzi serwera (200 - sukces, 400 - błąd) oraz lista list, gdzie każda pomniejsza lista zawiera wiadomość zaszyfrowaną kluczem symetrycznym oraz datę wysłania tej wiadomości.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="client.get_room_code">
+<span class="sig-prename descclassname"><span class="pre">client.</span></span><span class="sig-name descname"><span class="pre">get_room_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#client.get_room_code" title="Link to this definition">¶</a></dt>
+<dd><p>Wysyła żądanie do serwera zawierające nazwę użytkownika oraz token JWT potwierdzający tożsamość użytkownika. Celem żądania jest
+otrzymanie identyfikatora rozmowy, do której należą obaj użytkownicy. Jeśli żądanie wysłał autor rozmowy i jest to jego pierwsze
+takie żądanie to odpowiedź serwera będzie zawierała również zaszyfrowany asymetrycznie klucz symetryczny, który zostanie odszyfrowany
+i zapisany lokalnie na urządzeniu użytkownika.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – Nazwa użytkownika.</p></li>
+<li><p><strong>user</strong> – Nazwa użytkownika, który jest drugim uczestnikiem rozmowy.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status odpowiedzi serwera (200 - sukces, 400 - błąd) oraz identyfikator rozmowy.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="client.invite">
+<span class="sig-prename descclassname"><span class="pre">client.</span></span><span class="sig-name descname"><span class="pre">invite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#client.invite" title="Link to this definition">¶</a></dt>
+<dd><p>Wysyła żądanie do serwera zawierające nazwę zapraszanego użytkownika, token JWT potwierdzający tożsamość użytkownika
+oraz klucz publiczny (jeden z dwóch kluczy asymetrycznych wygenerowanych w ramach funkcji). Klucz prywatny zostaje
+zapisany lokalnie na urządzeniu użytkownika. Celem żądania jest zaproszenie użytkownika do rozmowy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – Nazwa użytkownika.</p></li>
+<li><p><strong>user</strong> – Nazwa zapraszanego użytkownika.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status odpowiedzi serwera (200 - sukces, 400 - błąd).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="client.login">
+<span class="sig-prename descclassname"><span class="pre">client.</span></span><span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#client.login" title="Link to this definition">¶</a></dt>
+<dd><p>Wysyła żądanie do serwera zawierające nazwę i hasło użytkownika w celu otrzymania tymczasowego tokena JWT dającego dostęp
+do weryfikacji TOTP. Jeśli token znajduje się w otrzymanej odpowiedzi, zostaje on zapisany lokalnie z użyciem keyring
+(np. w Windows Credential Manager).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – Nazwa użytkownika.</p></li>
+<li><p><strong>password</strong> – Hasło użytkownika.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status odpowiedzi serwera (200 - sukces, 400 - błąd).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="client.logout">
+<span class="sig-prename descclassname"><span class="pre">client.</span></span><span class="sig-name descname"><span class="pre">logout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#client.logout" title="Link to this definition">¶</a></dt>
+<dd><p>Z pomocą keyring usuwa lokalnie zapisany token JWT dla danego użytkownika.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>username</strong> – Nazwa użytkownika.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="client.register">
+<span class="sig-prename descclassname"><span class="pre">client.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#client.register" title="Link to this definition">¶</a></dt>
+<dd><p>Wysyła żądanie do serwera zawierające nazwę i hasło użytkownika w celu rejestracji konta oraz otrzymania tokenu JWT
+potwierdzającego tożsamość użytkownika. Jeśli token znajduje się w otrzymanej odpowiedzi, zostaje on zapisany lokalnie
+z użyciem keyring (np. w Windows Credential Manager). W przypadku prawidłowej rejestracji serwer zwraca również sekretny
+klucz, na podstawie którego wygenerowany zostaje kod QR pozwalający na powiązanie konta z aplikacją autoryzacyjną w celu
+korzystania z uwierzytelniania dwuskładnikowego.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – Nazwa użytkownika.</p></li>
+<li><p><strong>password</strong> – Hasło użytkownika.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status odpowiedzi serwera (200 - sukces, 400 - błąd).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="client.reply_to_invitation">
+<span class="sig-prename descclassname"><span class="pre">client.</span></span><span class="sig-name descname"><span class="pre">reply_to_invitation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#client.reply_to_invitation" title="Link to this definition">¶</a></dt>
+<dd><p>Wysyła żądanie do serwera zawierające nazwę użytkownika, który wysłał zaproszenie, token JWT potwierdzający tożsamość
+użytkownika oraz odpowiedź na zaproszenie. Jeśli decyzją jest «accept» i wszystko przebiegło prawidłowo to zaproszenie
+zostało zaakceptowane, a odpowiedź serwera zawiera klucz publiczny wysłany przez zapraszającego. Z jego pomocą zostaje
+zaszyfrowany klucz symetryczny wygenerowany podczas działania tej funkcji. Klucz symetryczny zostaje zapisany lokalnie
+na urządzeniu użytkownika oraz w swojej zaszyfrowanej wersji wysłany do serwera w celu przechowania go dopóki nie pobierze
+go osoba zapraszająca. Jeśli decyzją jest «decline» zaproszenie zostaje odrzucone (klucz symetryczny nie jest generowany).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – Nazwa użytkownika.</p></li>
+<li><p><strong>user</strong> – Nazwa użytkownika, który wysłał zaproszenie.</p></li>
+<li><p><strong>decision</strong> – Odpowiedź na zaproszenie («accept» - akceptacja zaproszenia, «decline» - odrzucenie zaproszenia).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status odpowiedzi serwera (200 - sukces, 400 - błąd).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="client.send_message">
+<span class="sig-prename descclassname"><span class="pre">client.</span></span><span class="sig-name descname"><span class="pre">send_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#client.send_message" title="Link to this definition">¶</a></dt>
+<dd><p>Wysyła żądanie do serwera zawierające wiadomość (zaszyfrowaną kluczem symetrycznym) wraz z datą, identyfikator rozmowy oraz token JWT
+potwierdzający tożsamość użytkownika. Celem żądania jest wysłanie do serwera wiadmości w ramach rozmowy wskazanej identyfikatorem. Zostanie
+tam przechowana dopóki nie odbierze jej drugi użytkownik.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – Nazwa użytkownika.</p></li>
+<li><p><strong>room_code</strong> – Identyfikator rozmowy.</p></li>
+<li><p><strong>user</strong> – Nazwa użytkownika, który jest odbiorcą wiadomości.</p></li>
+<li><p><strong>message</strong> – Treść wiadomości.</p></li>
+<li><p><strong>date</strong> – Data wysłania wiadomości.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status odpowiedzi serwera (200 - sukces, 400 - błąd).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="client.verify_totp">
+<span class="sig-prename descclassname"><span class="pre">client.</span></span><span class="sig-name descname"><span class="pre">verify_totp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">totp_code</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#client.verify_totp" title="Link to this definition">¶</a></dt>
+<dd><p>Wysyła żądanie do serwera zawierające kod TOTP oraz tymczasowy token JWT w celu otrzymania tokenu JWT potwierdzającego
+tożsamość użytkownika. Jeśli token znajduje się w otrzymanej odpowiedzi, zostaje on zapisany lokalnie z użyciem keyring
+(np. w Windows Credential Manager).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – Nazwa użytkownika.</p></li>
+<li><p><strong>totp_code</strong> – 6-cyfrowy kod TOTP do weryfikacji.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status odpowiedzi serwera (200 - sukces, 400 - błąd).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Chattersi</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Szukaj" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Nawigacja</h3>
+<p class="caption" role="heading"><span class="caption-text">Elementy Aplikacji:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="encryption_management.html">encryption_management module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_handling.html">user_handling module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">client module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#client.get_chat_members"><code class="docutils literal notranslate"><span class="pre">get_chat_members()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#client.get_messages"><code class="docutils literal notranslate"><span class="pre">get_messages()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#client.get_room_code"><code class="docutils literal notranslate"><span class="pre">get_room_code()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#client.invite"><code class="docutils literal notranslate"><span class="pre">invite()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#client.login"><code class="docutils literal notranslate"><span class="pre">login()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#client.logout"><code class="docutils literal notranslate"><span class="pre">logout()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#client.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#client.reply_to_invitation"><code class="docutils literal notranslate"><span class="pre">reply_to_invitation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#client.send_message"><code class="docutils literal notranslate"><span class="pre">send_message()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#client.verify_totp"><code class="docutils literal notranslate"><span class="pre">verify_totp()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">server module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logic.html">logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">GUI module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="user_handling.html" title="poprzedni rozdział">user_handling module</a></li>
+      <li>Next: <a href="server.html" title="następny rozdział">server module</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Mateusz Kozdęba, Zuzanna Klimczyk.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/client.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

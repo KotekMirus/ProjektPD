@@ -1,0 +1,22 @@
+.. Chattersi documentation master file, created by
+   sphinx-quickstart on Sun Jun  1 20:18:09 2025.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Chattersi - dokumentacja
+=========================
+
+Bezpieczny komunikator internetowy Chattersi. Pozwala na prowadzenie rozmów między dwoma użytkownikami.
+Zapewnia uwierzytelnianie dwuskładnikowe (wykorzystanie TOTP) oraz przechowywanie wiadomości jedynie na
+urządzeniach użytkowników. Pozwala na prowadzenie wielu konwersacji w ramach jednego konta.
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Elementy Aplikacji:
+
+   encryption_management
+   user_handling
+   client
+   server
+   logic
+   GUI

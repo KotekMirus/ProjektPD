@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html lang="pl" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>encryption_management module &#8212; Chattersi 0.1 - dokumentacja</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=e6b3e68e"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=2827c288"></script>
+    <link rel="index" title="Indeks" href="genindex.html" />
+    <link rel="search" title="Szukaj" href="search.html" />
+    <link rel="next" title="user_handling module" href="user_handling.html" />
+    <link rel="prev" title="Chattersi - dokumentacja" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-encryption_management">
+<span id="encryption-management-module"></span><h1>encryption_management module<a class="headerlink" href="#module-encryption_management" title="Link to this heading">¶</a></h1>
+<p>Moduł zawierający funkcje odpowiedzialne za generowanie klucza symetrycznego, kluczy asymetrycznych, zapisywanie ich lokalnie
+na urządzeniu użytkownika w odpowiednim miejscu oraz szyfrowanie i deszyfrowanie wiadomości z ich pomocą.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="encryption_management.check_structure_existence">
+<span class="sig-prename descclassname"><span class="pre">encryption_management.</span></span><span class="sig-name descname"><span class="pre">check_structure_existence</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#encryption_management.check_structure_existence" title="Link to this definition">¶</a></dt>
+<dd><p>Sprawdza czy istnieje folder data. Jeśli nie istnieje to go tworzy. Sprawdza czy w folderze data znajdują się pliki keys.json
+oraz tmp_keys.json. Jeśli nie to je tworzy.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="encryption_management.decrypt_message_asymmetric">
+<span class="sig-prename descclassname"><span class="pre">encryption_management.</span></span><span class="sig-name descname"><span class="pre">decrypt_message_asymmetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encrypted_message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#encryption_management.decrypt_message_asymmetric" title="Link to this definition">¶</a></dt>
+<dd><p>Odszyfrowuje przekazaną wiadomość z pomocą przekazanego klucza i zwraca tekst jawny.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – Klucz prywatny.</p></li>
+<li><p><strong>encrypted_message</strong> – Zaszyfrowana asymetrycznie wiadomość.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Odszyfrowana wiadomość.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="encryption_management.decrypt_message_symmetric">
+<span class="sig-prename descclassname"><span class="pre">encryption_management.</span></span><span class="sig-name descname"><span class="pre">decrypt_message_symmetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encrypted_message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#encryption_management.decrypt_message_symmetric" title="Link to this definition">¶</a></dt>
+<dd><p>Odszyfrowuje przekazaną wiadomość z pomocą przekazanego klucza i zwraca tekst jawny.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – Klucz symetryczny.</p></li>
+<li><p><strong>encrypted_message</strong> – Zaszyfrowana symetrycznie wiadomość.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Odszyfrowana wiadomość.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="encryption_management.delete_tmp_key">
+<span class="sig-prename descclassname"><span class="pre">encryption_management.</span></span><span class="sig-name descname"><span class="pre">delete_tmp_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#encryption_management.delete_tmp_key" title="Link to this definition">¶</a></dt>
+<dd><p>Usuwa tymczasowy klucz asymetryczny z pliku tmp_keys.json dla wskazanego użytkownika.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>user</strong> – Użytkownik, będący częścią rozmowy, z którą skojarzony jest klucz.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="encryption_management.encrypt_message_asymmetric">
+<span class="sig-prename descclassname"><span class="pre">encryption_management.</span></span><span class="sig-name descname"><span class="pre">encrypt_message_asymmetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#encryption_management.encrypt_message_asymmetric" title="Link to this definition">¶</a></dt>
+<dd><p>Szyfruje przekazaną wiadomość asymetrycznie z pomocą klucza publicznego i zwraca szyfrogram w postaci stringa.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – Klucz publiczny.</p></li>
+<li><p><strong>message</strong> – Wiadomość (z założenia jest nią klucz symetryczny).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Zaszyfrowana asymetrycznie wiadomość.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="encryption_management.encrypt_message_symmetric">
+<span class="sig-prename descclassname"><span class="pre">encryption_management.</span></span><span class="sig-name descname"><span class="pre">encrypt_message_symmetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#encryption_management.encrypt_message_symmetric" title="Link to this definition">¶</a></dt>
+<dd><p>Szyfruje przekazaną wiadomość symetrycznie z pomocą klucza symetrycznego i zwraca szyfrogram w postaci stringa.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – Klucz symetryczny.</p></li>
+<li><p><strong>message</strong> – Wiadomość (z założenia dowolona wiadomość wchodząca w skład rozmowy).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Zaszyfrowana symetrycznie wiadomość.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="encryption_management.generate_asymmetric_keys">
+<span class="sig-prename descclassname"><span class="pre">encryption_management.</span></span><span class="sig-name descname"><span class="pre">generate_asymmetric_keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#encryption_management.generate_asymmetric_keys" title="Link to this definition">¶</a></dt>
+<dd><p>Generuje klucz prywatny oraz z jego pomocą tworzy klucz publiczny (algorytm RSA). Klucze zostają przekształcone do postaci
+stringów i zwrócone przez funkcję.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Zwraca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Para kluczy asymetrycznych (RSA) w formie stringów.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="encryption_management.generate_symmetric_key">
+<span class="sig-prename descclassname"><span class="pre">encryption_management.</span></span><span class="sig-name descname"><span class="pre">generate_symmetric_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#encryption_management.generate_symmetric_key" title="Link to this definition">¶</a></dt>
+<dd><p>Generuje klucz symetryczny (moduł Fernet). Funkcja zwraca go w postaci stringa.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Zwraca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Klucz symetryczny w formie stringa.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="encryption_management.get_key">
+<span class="sig-prename descclassname"><span class="pre">encryption_management.</span></span><span class="sig-name descname"><span class="pre">get_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#encryption_management.get_key" title="Link to this definition">¶</a></dt>
+<dd><p>W zależności od tego czy jako argument tmp przekazano True czy False, zwraca klucz z pliku tmp_keys.json lub keys.json
+skojarzony ze wskazanym użytkownikiem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user</strong> – Użytkownik, będący częścią rozmowy, z którą skojarzony jest klucz.</p></li>
+<li><p><strong>tmp</strong> – Wartość True dla odczytu z pliku tmp_keys.json lub False dla odczytu z pliku keys.json.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Klucz (asymetryczny lub symetryczny).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="encryption_management.save_key">
+<span class="sig-prename descclassname"><span class="pre">encryption_management.</span></span><span class="sig-name descname"><span class="pre">save_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#encryption_management.save_key" title="Link to this definition">¶</a></dt>
+<dd><p>W zależności od tego czy jako argument tmp przekazano True czy False, zapisuje przekazany klucz przypisany do odpowiedniego
+użytkownika w pliku tmp_keys.json lub keys.json. Z założenia klucze asymetryczne są zapisywane w tmp_keys.json, a symetryczne
+w keys.json.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – Klucz (asymetryczny lub symetryczny).</p></li>
+<li><p><strong>user</strong> – Użytkownik, będący częścią rozmowy, z którą skojarzony jest klucz.</p></li>
+<li><p><strong>tmp</strong> – Wartość True dla zapisu do pliku tmp_keys.json lub False dla zapisu w pliku keys.json.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Chattersi</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Szukaj" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Nawigacja</h3>
+<p class="caption" role="heading"><span class="caption-text">Elementy Aplikacji:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">encryption_management module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#encryption_management.check_structure_existence"><code class="docutils literal notranslate"><span class="pre">check_structure_existence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#encryption_management.decrypt_message_asymmetric"><code class="docutils literal notranslate"><span class="pre">decrypt_message_asymmetric()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#encryption_management.decrypt_message_symmetric"><code class="docutils literal notranslate"><span class="pre">decrypt_message_symmetric()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#encryption_management.delete_tmp_key"><code class="docutils literal notranslate"><span class="pre">delete_tmp_key()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#encryption_management.encrypt_message_asymmetric"><code class="docutils literal notranslate"><span class="pre">encrypt_message_asymmetric()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#encryption_management.encrypt_message_symmetric"><code class="docutils literal notranslate"><span class="pre">encrypt_message_symmetric()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#encryption_management.generate_asymmetric_keys"><code class="docutils literal notranslate"><span class="pre">generate_asymmetric_keys()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#encryption_management.generate_symmetric_key"><code class="docutils literal notranslate"><span class="pre">generate_symmetric_key()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#encryption_management.get_key"><code class="docutils literal notranslate"><span class="pre">get_key()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#encryption_management.save_key"><code class="docutils literal notranslate"><span class="pre">save_key()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_handling.html">user_handling module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">client module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">server module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logic.html">logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">GUI module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="poprzedni rozdział">Chattersi - dokumentacja</a></li>
+      <li>Next: <a href="user_handling.html" title="następny rozdział">user_handling module</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Mateusz Kozdęba, Zuzanna Klimczyk.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/encryption_management.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

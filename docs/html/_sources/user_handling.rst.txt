@@ -1,0 +1,7 @@
+user\_handling module
+=====================
+
+.. automodule:: user_handling
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html lang="pl" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>GUI module &#8212; Chattersi 0.1 - dokumentacja</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=e6b3e68e"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=2827c288"></script>
+    <link rel="index" title="Indeks" href="genindex.html" />
+    <link rel="search" title="Szukaj" href="search.html" />
+    <link rel="prev" title="logic module" href="logic.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-GUI">
+<span id="gui-module"></span><h1>GUI module<a class="headerlink" href="#module-GUI" title="Link to this heading">¶</a></h1>
+<p>Moduł zawierający klasę, której metody odpowiadają za tworzenie i modyfikowanie graficznego interfejsu użytkownika.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="GUI.Chattersi">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GUI.</span></span><span class="sig-name descname"><span class="pre">Chattersi</span></span><a class="headerlink" href="#GUI.Chattersi" title="Link to this definition">¶</a></dt>
+<dd><p>Klasy bazowe: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Klasa, której metody odpowiadają za tworzenie i modyfikowanie graficznego interfejsu użytkownika.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.clear_frame">
+<span class="sig-name descname"><span class="pre">clear_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.clear_frame" title="Link to this definition">¶</a></dt>
+<dd><p>Czyści wszystkie widżety z okna aplikacji.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.confirm_totp_scanning">
+<span class="sig-name descname"><span class="pre">confirm_totp_scanning</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.confirm_totp_scanning" title="Link to this definition">¶</a></dt>
+<dd><p>Usuwa plik zawierający kod QR, który pozwala na przekazanie do aplikacji autentykacyjnej sekretnego klucza wykorzystywanego
+podczas konfiguracji TOTP, kiedy nie jest już potrzebny. Następnie wywołuje wyświetlenie listy rozmów.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.end_chat">
+<span class="sig-name descname"><span class="pre">end_chat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.end_chat" title="Link to this definition">¶</a></dt>
+<dd><p>Kończy rozmowę poprzez zastąpienie wartości pól klasy związanych z aktualną rozmową wartościami None. Wywołuje wyświetlenie
+listy rozmów.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.get_new_messages">
+<span class="sig-name descname"><span class="pre">get_new_messages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.get_new_messages" title="Link to this definition">¶</a></dt>
+<dd><p>Korzystając z funkcji get_messages() modułu client pobiera z serwera listę list, gdzie każda pomniejsza lista zawiera
+treść wiadomości i datę jej wysłania. Jeśli pobranie wiadomości powiodło się, zostają one zapisane lokalnie z pomocą
+save_messages_from_server(). Następnie sprawdzane jest czy użytkownik ma czat przewinięty do samego dołu (najświeższe
+wiadomości). Jeśli tak to pole wyświetlające wiadomości zostaje odświeżone (zaktualizowane o wyświetlanie nowych wiadmości)
+i widok zostaje z powrotem przewinięty na sam dół czatu. Jeśli użytkownik znajduje się w innym miejscu czatu to wiadomości
+zostają zapisane bez odświeżania pola wiadomości metodą load_chat_history(), aby nie przenieść go na siłę ze starego
+miejsca czatu, które przegląda, do samego dołu. Ostatnia linia kodu tej funkcji zapewnia automatyczne wywoływanie tej
+funkcji co sekundę.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.invite">
+<span class="sig-name descname"><span class="pre">invite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.invite" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje wysłanie zaproszenia do podanego użytkownika. Korzysta z funkcji invite() modułu client. Jeśli zaproszenie
+użytkownika przebiegło prawidłowo, zostanie wyświetlony komunikat na ten temat. W przeciwnym przypadku zostanie
+wyświetlone ostrzeżenie.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>user</strong> – Nazwa zaproszonego użytkownika podana w oknie wyświetlającym listę zaproszeń.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.load_chat_history">
+<span class="sig-name descname"><span class="pre">load_chat_history</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.load_chat_history" title="Link to this definition">¶</a></dt>
+<dd><p>Korzystając z obiektu do obsługi bazy danych wiadomości przechowywanego w odpowiednim polu klasy, pobiera 100 ostatnich
+wiadomości. Odblokowuje możliwość edycji pola do wyświetlania wiadomości, czyści je i w pętli dodaje do niego pobrane
+wiadomości z uwzględnieniem pogrubienia odpowiednich elementów. Na koniec blokuje możliwość edycji pola do wyświetlania
+wiadomości.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.login">
+<span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.login" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje logowanie użytkownika. Korzysta z funkcji login() modułu client. Jeśli logowanie powiodło się, wywołuje
+wyświetlenie formularza weryfikacji TOTP. W przeciwnym przypadku wraca do formularza logowania.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – Nazwa użytkownika.</p></li>
+<li><p><strong>password</strong> – Hasło użytkownika.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.logout">
+<span class="sig-name descname"><span class="pre">logout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.logout" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje wylogowanie użytkownika poprzez wywołanie funkcji logout() z modułu client, która usuwa z urządzenia token
+JWT dla wskazanego użytkownika. Po wylogowaniu wywołuje wyświetlenie formularza logowania.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.register">
+<span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeated_password</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.register" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje rejestrację konta użytkownika. Jeśli hasło i powtórzone hasło są takie same, korzysta z funkcji register()
+modułu client. Jeśli rejestracja powiodła się, wywołuje wyświetlenie kodu QR, który należy zeskanować aplikacją
+autentykacyjną w celu skonfigurowania uwierzytelniania dwuskładnikowego. W przeciwnym przypadku wyświetlone zostaje
+ostrzeżenie.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – Nazwa użytkownika.</p></li>
+<li><p><strong>password</strong> – Hasło użytkownika.</p></li>
+<li><p><strong>repeated_password</strong> – Powtórzone hasło użytkownika.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.reply_to_invitation">
+<span class="sig-name descname"><span class="pre">reply_to_invitation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.reply_to_invitation" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje odpowiedź na zaproszenie od podanego użytkownika. Korzysta z funkcji reply_to_invitation() modułu client.
+Jeśli użytkownik nacisnął w oknie wyświetlającym listę zaproszeń przycisk «Akceptuj» to jako decyzja przekazane zostało
+«accept», czyli akceptacja zaproszenia. Analogicznie działa to dla przycisku «Odrzuć» i decyzji «decline». Na koniec
+funkcji wywołane zostaje wyświetlenie listy zaproszeń.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user</strong> – Nazwa użytkownika, który wysłał zaproszenie.</p></li>
+<li><p><strong>decision</strong> – Odpowiedź na zaproszenie (powinno to być «accept» lub «decline»).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.run" title="Link to this definition">¶</a></dt>
+<dd><p>Uruchamia główną pętlę tkintera.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.send_message">
+<span class="sig-name descname"><span class="pre">send_message</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.send_message" title="Link to this definition">¶</a></dt>
+<dd><p>Pobiera zawartość wpisaną przez użytkownika w pole wysyłania wiadomości. Jeśli zawartość nie jest pusta to odczytywana
+jest aktualna data i godzina i wiadomość zostaje wysłana do serwera z pomocą funkcji send_message() modułu client. Jeśli
+wysłanie powiodło się, wiadomość zostaje zapisana lokalnie, a pole wysyłania wiadomości wyczyszczone. Pole wyświetlania
+wiadomości zostaje odświeżone (zaktualizowane o nową wiadomość), a widok przewinięty na sam dół czatu.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.show_chat">
+<span class="sig-name descname"><span class="pre">show_chat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.show_chat" title="Link to this definition">¶</a></dt>
+<dd><p>Wyświetla rozmowę, czyli duże pole tekstowe przeznaczone do wyświetlania wiadomości oraz małe pole tekstowe do wprowadzenia
+nowej wiadomości wraz z przyciskiem «Wyślij», który wywołuje metodę obsługującą wysłanie wiadomości. Zapisuje w polu klasy
+obiekt do obsługi bazy danych wiadomości i wyświetla wiadomości z pomocą metody load_chat_history().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.show_chats">
+<span class="sig-name descname"><span class="pre">show_chats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.show_chats" title="Link to this definition">¶</a></dt>
+<dd><p>Wyświetla listę rozmów, która ma formę możliwych do scrollowania ramek, gdzie do każdej ramki przyporządkowany jest
+przycisk typu RadioButton. Można wybrać maksymalnie jedną rozmowę na raz, wybranie innej odznacza RadioButton poprzedniej.
+Lista nazw użytkowników wyświetlanych w ramkach rozmów jest pobierana z serwera przez wywołaną w tej metodzie funkcję
+get_chat_members() z modułu client. Okno zawiera przyciski pozwalające na wywołanie: wyświetlenia wybranej rozmowy,
+wyświetlenia listy zaproszeń, wylogowania.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.show_check_chat">
+<span class="sig-name descname"><span class="pre">show_check_chat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.show_check_chat" title="Link to this definition">¶</a></dt>
+<dd><p>Sprawdza, czy użytkownik wybrał rozmowę (zaznaczył jeden z przycisków typu RadioButton). Jeśli tak to identyfikator rozmowy
+zostaje pobrany z serwera z pomocą funkcji get_room_code() modułu client. Jeśli pobranie identyfikatora się powiodło, dane
+aktualnej rozmowy zostają zapisane w odpowiednich polach klasy i zostaje wywołane wyświetlenie rozmowy. W przeciwnym przypadku
+zostaje wyświetlone ostrzeżenie.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.show_invitations">
+<span class="sig-name descname"><span class="pre">show_invitations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.show_invitations" title="Link to this definition">¶</a></dt>
+<dd><p>Wyświetla listę zaproszeń, która ma formę możliwych do scrollowania ramek, gdzie do każdej ramki przyporządkowane są
+dwa przyciski. Za pomocą pierwszego przycisku można zaakceptować zaproszenie, a za pomocą drugiego je odrzucić. Po
+wybraniu jednej z opcji, ramka znika z listy. Lista nazw użytkowników wyświetlanych w ramkach zaproszeń jest pobierana
+z serwera przez wywołaną w tej metodzie funkcję get_chat_members() z modułu client. Okno zawiera również pole do
+wprowadzenia nazwy użytkownika i przycisk pozwalający wysłać do niego zaproszenie poprzez wywołanie odpowiedniej metody
+tej klasy.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.show_login">
+<span class="sig-name descname"><span class="pre">show_login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.show_login" title="Link to this definition">¶</a></dt>
+<dd><p>Wyświetla formularz logowania, który pozwala na wprowadzenie nazwy oraz hasła użytkownika i przejście do logowania
+lub formularza rejestracji.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.show_qr">
+<span class="sig-name descname"><span class="pre">show_qr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.show_qr" title="Link to this definition">¶</a></dt>
+<dd><p>Wyświetla kod QR, który należy zeskanować aplikacją autentykacyjną w celu skonfigurowania uwierzytelniania dwuskładnikowego.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.show_register">
+<span class="sig-name descname"><span class="pre">show_register</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.show_register" title="Link to this definition">¶</a></dt>
+<dd><p>Wyświetla formularz rejestracji konta, który pozwala na wprowadzenie nazwy oraz hasła użytkownika (dwa razy) i przejście
+do rejestracji lub powrót do formularza logowania.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.show_totp">
+<span class="sig-name descname"><span class="pre">show_totp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.show_totp" title="Link to this definition">¶</a></dt>
+<dd><p>Wyświetla formularz weryfikacji TOTP, który zawiera pole do wprowadzenia jednorazowego kodu TOTP i przycisk pozwalający
+przejść do weryfikacji.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.Chattersi.verify_totp">
+<span class="sig-name descname"><span class="pre">verify_totp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">totp_code</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.Chattersi.verify_totp" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje weryfikację TOTP. Korzysta z funkcji verify_totp() modułu client. Jeśli weryfikacja przebiegła poprawnie,
+zostaje wywołane wyświetlenie listy rozmów. W przeciwnym przypadku zostaje wyświetlone ostrzeżenie.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>totp_code</strong> – Jednorazowy, 6-cyfrowy kod TOTP.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Chattersi</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Szukaj" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Nawigacja</h3>
+<p class="caption" role="heading"><span class="caption-text">Elementy Aplikacji:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="encryption_management.html">encryption_management module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_handling.html">user_handling module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">client module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">server module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logic.html">logic module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">GUI module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#GUI.Chattersi"><code class="docutils literal notranslate"><span class="pre">Chattersi</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.clear_frame"><code class="docutils literal notranslate"><span class="pre">Chattersi.clear_frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.confirm_totp_scanning"><code class="docutils literal notranslate"><span class="pre">Chattersi.confirm_totp_scanning()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.end_chat"><code class="docutils literal notranslate"><span class="pre">Chattersi.end_chat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.get_new_messages"><code class="docutils literal notranslate"><span class="pre">Chattersi.get_new_messages()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.invite"><code class="docutils literal notranslate"><span class="pre">Chattersi.invite()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.load_chat_history"><code class="docutils literal notranslate"><span class="pre">Chattersi.load_chat_history()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.login"><code class="docutils literal notranslate"><span class="pre">Chattersi.login()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.logout"><code class="docutils literal notranslate"><span class="pre">Chattersi.logout()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.register"><code class="docutils literal notranslate"><span class="pre">Chattersi.register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.reply_to_invitation"><code class="docutils literal notranslate"><span class="pre">Chattersi.reply_to_invitation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.run"><code class="docutils literal notranslate"><span class="pre">Chattersi.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.send_message"><code class="docutils literal notranslate"><span class="pre">Chattersi.send_message()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.show_chat"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_chat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.show_chats"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_chats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.show_check_chat"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_check_chat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.show_invitations"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_invitations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.show_login"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_login()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.show_qr"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_qr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.show_register"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.show_totp"><code class="docutils literal notranslate"><span class="pre">Chattersi.show_totp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.Chattersi.verify_totp"><code class="docutils literal notranslate"><span class="pre">Chattersi.verify_totp()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="logic.html" title="poprzedni rozdział">logic module</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Mateusz Kozdęba, Zuzanna Klimczyk.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/GUI.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

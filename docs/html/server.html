@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+
+<html lang="pl" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>server module &#8212; Chattersi 0.1 - dokumentacja</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=e6b3e68e"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=2827c288"></script>
+    <link rel="index" title="Indeks" href="genindex.html" />
+    <link rel="search" title="Szukaj" href="search.html" />
+    <link rel="next" title="logic module" href="logic.html" />
+    <link rel="prev" title="client module" href="client.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-server">
+<span id="server-module"></span><h1>server module<a class="headerlink" href="#module-server" title="Link to this heading">¶</a></h1>
+<p>Moduł zawierający logikę serwera. Odpowiada za obsługę wszystkich żądań, zwracanie odpowiedzi, tworzenie tokenów JWT oraz generowanie
+identyfikatorów rozmów.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="server.add_key_to_room">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">add_key_to_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.add_key_to_room" title="Link to this definition">¶</a></dt>
+<dd><p>Dodaje do rozmowy/pokoju zaszyfrowany asymetrycznie klucz symetryczny (akcja ta jest wykonywana, gdy
+użytkownik zaakceptuje zaproszenie i przekaże wygenerowany przez siebie klucz symetryczny).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>room_code</strong> – Identyfikator rozmowy.</p></li>
+<li><p><strong>key</strong> – Zaszyfrowany asymetrycznie klucz symetryczny.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.add_symmetric_key_to_room">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">add_symmetric_key_to_room</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.add_symmetric_key_to_room" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje żądanie /addkey (typu POST), czyli dodanie klucza symetrycznego do rozmowy. Pobiera z żądania token JWT,
+nazwę użytkownika, który wchodzi w skład rozmowy oraz klucz symetryczny (zaszyfrowany). Jeżeli token JWT jest ważny
+i daje dostęp do tego endpointu, przekazany użytkownik istnieje i jest częścią rozmowy, a użytkownik, który wysłał
+żądanie nie jest autorem pokoju to do pokoju dodany zostanie zaszyfrowany klucz symetryczny, a odpowiedź serwera
+będzie zawierała kod 200 (sukces). Jeśli którekolwiek dane były błędne to odpowiedź serwera będzie zawierała kod
+400 (błąd).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Zwraca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Obiekt JSON z informacją o statusie dodania klucza do rozmowy.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.check_rooms_file_existence">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">check_rooms_file_existence</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.check_rooms_file_existence" title="Link to this definition">¶</a></dt>
+<dd><p>Sprawdza czy istnieje folder data. Jeśli nie istnieje to go tworzy. Sprawdza czy w folderze data znajduje się
+plik rooms.json. Jeśli nie to go tworzy.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.check_totp">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">check_totp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.check_totp" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje żądanie /totp (typu POST), czyli weryfikację kodu TOTP, będącego częścią uwierzytelniania dwuskładnikowego.
+Pobiera z żądania token JWT oraz kod TOTP. Jeżeli zawartość tokena wskazuje na dostęp do weryfikacji TOTP, a nazwa
+i kod są prawidłowe to odpowiedź serwera będzię zawierała kod 200 (sukces) oraz token JWT potwierdzający tożsamość
+użytkownika ważny przez 6 godzin. Jeśli którekolwiek dane są błędne, to odpowiedź serwera będzie zawierała kod 400
+(błąd).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Zwraca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Obiekt JSON z informacją o statusie weryfikacji TOTP oraz ewentualnym tokenem JWT.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.create_jwt">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">create_jwt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_version</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.create_jwt" title="Link to this definition">¶</a></dt>
+<dd><p>Tworzy token JWT, który ma przez ograniczony czas dawać dostęp podanemu użytkownikowi do wskazanych zasobów.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – Nazwa użytkownika, dla którego ma być stworzony token.</p></li>
+<li><p><strong>mode</strong> – «logedin» jeśli token ma dawać dostęp do wszystkich zasobów, «totp» jeśli token ma dawać dostęp jedynie do weryfikacji TOTP.</p></li>
+<li><p><strong>time_version</strong> – 0 jeśli czas ważności tokena ma wynosić 6 godzin, 1 jeśli czas ten ma wynosić 5 minut.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Token JWT potwierdzający tożsamość użytkownika.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.decode_jwt">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">decode_jwt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.decode_jwt" title="Link to this definition">¶</a></dt>
+<dd><p>Dekoduje token JWT w celu zwrócenia jego zawartości lub zwrócenia None w przypadku gdy token jest nieważny.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> – Token JWT.</p>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Zawartość tokena JWT lub None jeśli token jest nieważny.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.find_all_user_rooms">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">find_all_user_rooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.find_all_user_rooms" title="Link to this definition">¶</a></dt>
+<dd><p>Zwraca listę nazw wszystkich użytkowników, którzy są częścią rozmów, do których należy przekazany użytkownik
+lub którzy są częścią zaproszeń związanych z danym użytkownikiem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – Nazwa użytkownika.</p></li>
+<li><p><strong>room_type</strong> – Typ pokoju («chats» dla już zaakceptowanych rozmów, «invitations» dla zaproszeń).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Lista nazw wszystkich użytkowników, którzy są częścią rozmów, do których należy przekazany użytkownik lub którzy są częścią zaproszeń związanych z danym użytkownikiem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.find_room">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">find_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.find_room" title="Link to this definition">¶</a></dt>
+<dd><p>Znajduje rozmowę, do której należą obaj podani użytkownicy i zwraca jej identyfikator, autora oraz skojarzony
+z nią klucz publiczny.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user1</strong> – Nazwa użytkownika, który jest uczestnikiem rozmowy.</p></li>
+<li><p><strong>user2</strong> – Nazwa drugiego użytkownika, który jest uczestnikiem rozmowy.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Identyfikator rozmowy, autor rozmowy (osoba, która wysłała zaproszenie) oraz klucz publiczny.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.generate_room_code">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">generate_room_code</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.generate_room_code" title="Link to this definition">¶</a></dt>
+<dd><p>Generuje i zwraca unikatowy 6-cyfrowy identyfikator rozmowy i zwraca go w postaci stringa.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Zwraca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Unikatowy 6-cyfrowy identyfikator rozmowy w postaci stringa.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.get_key_from_room">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">get_key_from_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_code</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.get_key_from_room" title="Link to this definition">¶</a></dt>
+<dd><p>Zwraca zaszyfrowany asymetrycznie klucz symetryczny skojarzony z daną rozmową/pokojem i usuwa go z serwera.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>room_code</strong> – Identyfikator rozmowy.</p>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Zaszyfrowany asymetrycznie klucz symetryczny</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.get_messages">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">get_messages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.get_messages" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje żądanie /get (typu POST), czyli pobranie wiadomości. Pobiera z żądania token JWT oraz identyfikator rozmowy.
+Jeżeli token JWT jest ważny i daje dostęp do tego endpointu oraz użytkownik, który wysłał żądanie, jest częścią wskazanej
+rozmowy to odpowiedź serwera będzie zawierała kod 200 (sukces) oraz listę list, gdzie każda pomniejsza lista składa się
+z zaszyfrowanej wiadomości i daty jej wysłania. Jeśli token JWT jest nieważny lub użytkownik, który wysłał żądanie, nie
+jest częścią wskazanej rozmowy to odpowiedź serwera będzie zawierała kod 400 (błąd).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Zwraca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Obiekt JSON z informacją o statusie pobrania wiadomości.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.get_room_code">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">get_room_code</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.get_room_code" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje żądanie /getcode (typu POST), czyli zwrócenie identyfikatora rozmowy. Pobiera z żądania token JWT oraz
+nazwę użytkownika, który wchodzi w skład rozmowy. Jeżeli token JWT jest ważny i daje dostęp do tego endpointu, a
+obaj użytkownicy są częścią tej samej rozmowy to odpowiedź serwera będzie zawierała kod 200 (sukces) oraz identyfikator
+rozmowy. Ponadto jeśli jest to pierwsze takie żądanie wykonane przez autora tej rozmowy to odpowiedź serwera będzie
+zawierała również zaszyfrowany asymetrycznie klucz symetryczny. Jeśli token JWT jest nieważny lub nie istnieje
+rozmowa między oboma użytkownikami to odpowiedź serwera będzie zawierała kod 400 (błąd).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Zwraca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Obiekt JSON z informacją o statusie zwrócenia identyfikatora rozmowy oraz ewentualnymi identyfikatorem rozmowy i zaszyfrowanym asymetrycznie kluczem symetrycznym.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.get_roommates">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">get_roommates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_codes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.get_roommates" title="Link to this definition">¶</a></dt>
+<dd><p>Zwraca listę nazw wszystkich uczestników rozmów o podanych identyfikatorach.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>room_code</strong> – Lista identyfikatorów rozmów.</p>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Lista nazw wszystkich uczestników rozmów o podanych identyfikatorach.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.get_rooms">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">get_rooms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.get_rooms" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje żądanie /getrooms (typu POST), czyli zwrócenie nazw wszystkich użytkowników, którzy wchodzą w skład pokoi
+danego typu, do których należy również użytkownik, który wysłał żądanie. Pobiera z żądania token JWT oraz typ pokoju,
+którym powinno być «chats» lub «invitations». Jeżeli token JWT jest ważny i daje dostęp do tego endpointu to odpowiedź
+serwera będzie zawierała kod 200 (sukces) oraz listę wszystkich użytkowników wchodzących w skład pokoi danego typu,
+do których należy również użytkownik, który wysłał żądanie. Jeśli którekolwiek dane były błędne to odpowiedź serwera
+będzie zawierała kod 400 (błąd).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Zwraca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Obiekt JSON z informacją o statusie zwrócenia listy użytkowników oraz ewentualną listą użytkowników.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.get_rooms_codes">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">get_rooms_codes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.get_rooms_codes" title="Link to this definition">¶</a></dt>
+<dd><p>Zwraca listę identyfikatorów wszystkich rozmów (zarówno tych mających status zaproszeń jak i tych już zaakceptowanych).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Zwraca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Lista identyfikatorów wszystkich rozmów/pokojów.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.invite">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">invite</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.invite" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje żądanie /invite (typu POST), czyli wysłanie zaproszenia do rozmowy. Pobiera z żądania token JWT, nazwę
+użytkownika, do którego skierowane jest zaproszenie oraz klucz publiczny. Jeżeli token JWT jest ważny i daje dostęp
+do tego endpointu, a zaproszony użytkownik istnieje i nie został wcześniej zaproszony to odpowiedź serwera będzie
+zawierała kod 200 (sukces) oraz zostanie wygenerowany identyfikatora rozmowy, a z jego pomocą i danymi użytkowników
+zostanie utworzony nowy pokój, który zostanie zapisany na serwerze. Jeśli którekolwiek dane były błędne to pokój
+nie zostanie utworzony, a odpowiedź serwera będzie zawierała kod 400 (błąd).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Zwraca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Obiekt JSON z informacją o statusie zaproszenia.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.login">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.login" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje żądanie /register (typu POST), czyli logowanie użytkownika. Pobiera z żądania nazwę oraz hasło i jeśli
+oba są prawidłowe to odpowiedź serwera zawiera kod 200 (sukces) oraz token JWT potwierdzający tożsamość użytkownika
+ważny przez 5 minut i dający dostęp jedynie do weryfikacji TOTP. Jeśli dane logowania są błędne to odpowiedź serwera
+zawiera kod 400 (błąd).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Zwraca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Obiekt JSON z informacją o statusie logowania oraz ewentualnym tokenem JWT.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.register">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.register" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje żądanie /register (typu POST), czyli rejestrację konta użytkownika. Pobiera z żądania nazwę oraz hasło
+i jeśli spełnione są warunki (nazwa ma od 3 do 32 znaków długości i nie zawiera znaków specjalnych oraz hasło ma
+od 12 do 64 znaków długości), a użytkownik o podanej nazwie nie istnieje, to konto jest rejestrowane, a odpowiedź
+serwera zawiera kod 200 (sukces) oraz token JWT potwierdzający tożsamość użytkownika ważny przez 6 godzin. Jeśli
+któryś z warunków nie jest spełniony to odpowiedź serwera zawiera kod 400 (błąd).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Zwraca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Obiekt JSON z informacją o statusie rejestracji oraz ewentualnym tokenem JWT.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.reply_to_invitation">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">reply_to_invitation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.reply_to_invitation" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje żądanie /reply_to_invitation (typu POST), czyli akceptację lub odrzucenie zaproszenia do rozmowy. Pobiera
+z żądania token JWT, nazwę użytkownika, który wysłał zaproszenie oraz decyzję. Jeżeli token JWT jest ważny i daje
+dostęp do tego endpointu, zaproszający użytkownik istnieje i wysłał zaproszenie, a decyzja to «accept» lub «decline»
+to odpowiedź serwera będzie zawierała kod 200 (sukces). Jeśli decyzją było zaakceptowanie zaproszenia to po usunięciu
+pokoju z sekcji zaproszeń, zostanie on dodany do sekcji zaakceptowanych rozmów w pliku users.json. Dodatkowo do
+odpowiedzi serwera zostanie dołączony klucz publiczny skojarzony z identyfikatorem tej rozmowy. Jeśli jednak decyzją
+było odrzucenie zaproszenia, pokój zostanie usunięty. Jeśli którekolwiek dane były błędne to odpowiedź serwera będzie
+zawierała kod 400 (błąd).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Zwraca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Obiekt JSON z informacją o statusie odpowiedzi na zaproszenie oraz ewentualnym kluczem publicznym.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.return_all_messages">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">return_all_messages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">receiver</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.return_all_messages" title="Link to this definition">¶</a></dt>
+<dd><p>Zwraca listę wszystkich wiadomości wysłanych do wskazanego użytkownika przechowywanych na serwerze i usuwa je
+z serwera.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>room_code</strong> – Identyfikator rozmowy.</p></li>
+<li><p><strong>receiver</strong> – Odbiorca wiadomości.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Zwraca<span class="colon">:</span></dt>
+<dd class="field-even"><p>Lista wszystkich wiadomości skierowanych do wskazanego użytkownika.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.run_server">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">run_server</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.run_server" title="Link to this definition">¶</a></dt>
+<dd><p>Uruchamia serwer Flask na lokalnym hoście z włączonym protokołem HTTPS. Serwer jest uruchamiany na adresie 127.0.0.1
+i porcie 5000 z automatycznie generowanym certyfikatem SSL.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.save_room">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">save_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.save_room" title="Link to this definition">¶</a></dt>
+<dd><p>Zapisuje dane rozmowy/pokoju w pliku rooms.json.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>room_code</strong> – Identyfikator rozmowy.</p></li>
+<li><p><strong>members</strong> – Lista nazw użytkowników wchodzących w skład rozmowy.</p></li>
+<li><p><strong>author</strong> – Twórca rozmowy (osoba, która wysłała zaproszenie).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.save_sent_message">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">save_sent_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.save_sent_message" title="Link to this definition">¶</a></dt>
+<dd><p>Zapisuje na serwerze w pliku rooms.json wiadomość wysłaną przez użytkownika.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>room_code</strong> – Identyfikator rozmowy.</p></li>
+<li><p><strong>author</strong> – Autor wiadomości.</p></li>
+<li><p><strong>message</strong> – Wiadomość.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="server.send_message">
+<span class="sig-prename descclassname"><span class="pre">server.</span></span><span class="sig-name descname"><span class="pre">send_message</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.send_message" title="Link to this definition">¶</a></dt>
+<dd><p>Obsługuje żądanie /send (typu POST), czyli wysłanie wiadomości. Pobiera z żądania token JWT, identyfikator rozmowy
+oraz wiadomość. Jeżeli token JWT jest ważny i daje dostęp do tego endpointu oraz użytkownik, który wysłał żądanie,
+jest częścią wskazanej rozmowy to wiadomość zostanie tymczasowo zapisana na serwerze, a odpowiedź serwera będzie
+zawierała kod 200 (sukces). Jeśli token JWT jest nieważny lub użytkownik, który wysłał żądanie, nie jest częścią
+wskazanej rozmowy to odpowiedź serwera będzie zawierała kod 400 (błąd).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Zwraca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Obiekt JSON z informacją o statusie wysłania wiadomości.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Chattersi</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Szukaj" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Nawigacja</h3>
+<p class="caption" role="heading"><span class="caption-text">Elementy Aplikacji:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="encryption_management.html">encryption_management module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_handling.html">user_handling module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">client module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">server module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#server.add_key_to_room"><code class="docutils literal notranslate"><span class="pre">add_key_to_room()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.add_symmetric_key_to_room"><code class="docutils literal notranslate"><span class="pre">add_symmetric_key_to_room()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.check_rooms_file_existence"><code class="docutils literal notranslate"><span class="pre">check_rooms_file_existence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.check_totp"><code class="docutils literal notranslate"><span class="pre">check_totp()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.create_jwt"><code class="docutils literal notranslate"><span class="pre">create_jwt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.decode_jwt"><code class="docutils literal notranslate"><span class="pre">decode_jwt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.find_all_user_rooms"><code class="docutils literal notranslate"><span class="pre">find_all_user_rooms()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.find_room"><code class="docutils literal notranslate"><span class="pre">find_room()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.generate_room_code"><code class="docutils literal notranslate"><span class="pre">generate_room_code()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.get_key_from_room"><code class="docutils literal notranslate"><span class="pre">get_key_from_room()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.get_messages"><code class="docutils literal notranslate"><span class="pre">get_messages()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.get_room_code"><code class="docutils literal notranslate"><span class="pre">get_room_code()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.get_roommates"><code class="docutils literal notranslate"><span class="pre">get_roommates()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.get_rooms"><code class="docutils literal notranslate"><span class="pre">get_rooms()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.get_rooms_codes"><code class="docutils literal notranslate"><span class="pre">get_rooms_codes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.invite"><code class="docutils literal notranslate"><span class="pre">invite()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.login"><code class="docutils literal notranslate"><span class="pre">login()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.reply_to_invitation"><code class="docutils literal notranslate"><span class="pre">reply_to_invitation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.return_all_messages"><code class="docutils literal notranslate"><span class="pre">return_all_messages()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.run_server"><code class="docutils literal notranslate"><span class="pre">run_server()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.save_room"><code class="docutils literal notranslate"><span class="pre">save_room()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.save_sent_message"><code class="docutils literal notranslate"><span class="pre">save_sent_message()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server.send_message"><code class="docutils literal notranslate"><span class="pre">send_message()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="logic.html">logic module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">GUI module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="client.html" title="poprzedni rozdział">client module</a></li>
+      <li>Next: <a href="logic.html" title="następny rozdział">logic module</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Mateusz Kozdęba, Zuzanna Klimczyk.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/server.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
